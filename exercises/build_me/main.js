@@ -56,7 +56,15 @@ var main = function(ex) {
             ex.insertDropdown(TextboxElement, identifier, button);
         };
 
-    var listOfStringTypes = ["a", "A", "hello", "chr(97)", "\'0\'"]
+
+
+    var listOfStringTypes = ["a", "A", "hello", "chr(97)", "\'0\'"];
+    var listOfIntTypes = ["13", "42", "-124", "ord('a')", "0"]; //Can dynamically do these and will add later
+    var listOfFloatTypes = ["1.", "42.9999999999", "0.1", "4.2"];
+    var listOfBoolTypes = ["True", "False", "1 and 0", "True or False"];
+    var listOfAllTypes = [listOfStringTypes, listOfIntTypes, listOfFloatTypes, listOfBoolTypes];
+
+
 
     function runPracticeMode(){
         alert("Practice Mode");
@@ -101,8 +109,39 @@ var main = function(ex) {
         insertButtonTextbox112(beginBox, beginButton, "BUTTON");
     }
 
-    function playQuizGame(){
+    function playPracticeGame(){
+        //Randomly Generate an element and type
+        //Create graphics as needed
+        //Check for mousedown (function needed)
+        //Drag and drop
+        //Check for correctness
+        //Create feedback as needed
         return;
+    }
+
+    var showAgain = true;
+
+    function provideFeedback(value, expectedResult, actualResult){
+        if (expectedResult == actualResult){
+            if (showAgain){
+                var hideButton = ex.createButton(0, 0, "Hide Correct Feedback");
+                hideButton.on("click", function() {
+                    showAgain = false;
+                    correctBox.remove();
+                })
+                var nahButton = ex.createButton(0, 0, "OK");
+                nahButton.on("click", function(){
+                    correctBox.remove();
+                })
+                var correctBox = textbox112("Correct! <span>BTN1</span> <span>BTN2</span>");
+                insertButtonTextbox112(correctBox, hideButton, "BTN1");
+                insertButtonTextbox112(correctBox, nahButton, "BTN2");
+            }
+        }
+        else{
+            //Add in feedback
+            return
+        }
     }
 
     function runQuizDelayMode(){
