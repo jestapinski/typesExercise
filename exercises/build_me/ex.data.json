@@ -1,17 +1,17 @@
 {
     "meta": {
-        "author": "",
-        "email": "",
+        "author": "Jordan Stapinski, Lilian Chin",
+        "email": "jstapins@andrew.cmu.edu",
 
-        "title": "Change Me",
-        "description": "Fill me in.",
+        "title": "Types in Python",
+        "description": "Learning About Python Types",
         "id": "answerid-stl",
         "language": "python",
         "difficulty": "medium",
         "mainFile": "main.js",
         "instrFile": "instr.html",
         "constructorName": "main",
-        "menuDisplayName": "Change Me!",
+        "menuDisplayName": "Types",
         "requires": {
         }
     }

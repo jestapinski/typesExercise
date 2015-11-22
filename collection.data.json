@@ -1,9 +1,9 @@
 {
     "meta": {
-        "author": "",
-        "email": "",
+        "author": "Jordan Stapinski, Lilian Chin",
+        "email": "jstapins@andrew.cmu.edu",
         "description": "",
-        "id": "e",
+        "id": "types Exercise 15539 CMU F15",
         "languages": ["python"],
         "difficulty": "medium",
         "mode": "quiz-immediate",
