@@ -56,6 +56,8 @@ var main = function(ex) {
             ex.insertDropdown(TextboxElement, identifier, button);
         };
 
+    var listOfStringTypes = ["a", "A", "hello", "chr(97)", "\'0\'"]
+
     function runPracticeMode(){
         alert("Practice Mode");
         return;
@@ -64,14 +66,42 @@ var main = function(ex) {
     function runQuizImmediateMode(){
         alert("Quizzing Immediately");
         ex.createParagraph(500, 500, "Hello world");
-        var newButton = ex.createButton(0, 0, "wow");
+        var newButton = ex.createButton(0, 0, "OK");
         newButton.on("click", function() {
             console.log("such button very 539");
+            newBox.remove();
+            secondInstructionBox();
         })
         var newBox = textbox112("Here we will talk about Python Types <span>BUTTON</span>", {
             color: "blue"
         });
         insertButtonTextbox112(newBox, newButton, "BUTTON");
+        return;
+    }
+
+    function secondInstructionBox(){
+        var infoOkButton = ex.createButton(0, 0, "OK");
+        infoOkButton.on("click", function() {
+            infoBox.remove();
+            playGuideBox();
+        })
+        var infoBox = textbox112("For more on types, click the info button, else let's begin <span>BUTTON</span>", {
+            color: "blue"
+        })
+        insertButtonTextbox112(infoBox, infoOkButton, "BUTTON");
+    }
+
+    function playGuideBox(){
+        var beginButton = ex.createButton(0, 0, "OK");
+        beginButton.on("click", function() {
+            beginBox.remove();
+            playQuizGame();
+        })
+        var beginBox = textbox112("Select and drop the correct type of object <span> BUTTON </span>");
+        insertButtonTextbox112(beginBox, beginButton, "BUTTON");
+    }
+
+    function playQuizGame(){
         return;
     }
 
