@@ -73,16 +73,17 @@ var main = function(ex) {
 
     function runQuizImmediateMode(){
         alert("Quizzing Immediately");
-        ex.createParagraph(500, 500, "Hello world");
-        var newButton = ex.createButton(0, 0, "OK");
-        newButton.on("click", function() {
-            console.log("such button very 539");
-            newBox.remove();
-            secondInstructionBox();
-        })
-        var newBox = textbox112("Here we will talk about Python Types <span>BUTTON</span>", {
-            color: "blue"
-        });
+        // ex.createParagraph(500, 500, "Hello world");
+        // var newButton = ex.createButton(0, 0, "OK");
+        // newButton.on("click", function() {
+        //     console.log("such button very 539");
+        //     newBox.remove();
+        //     secondInstructionBox();
+        // })
+        // var newBox = textbox112("Here we will talk about Python Types <span>BUTTON</span>", {
+        //     color: "blue"
+        // });
+        playGuideBox();
         insertButtonTextbox112(newBox, newButton, "BUTTON");
         return;
     }
@@ -109,9 +110,90 @@ var main = function(ex) {
         insertButtonTextbox112(beginBox, beginButton, "BUTTON");
     }
 
+    function randomIndex(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+//Inspired by kitchen sink
+    function createRectangleObject(left, top, width, height, color, text, outlined){
+        var rectangle = {};
+        rectangle.top = top;
+        rectangle.left = left;
+        rectangle.width = width;
+        rectangle.height = height;
+        rectangle.right = rectangle.left + rectangle.width;
+        rectangle.bottom = rectangle.top + rectangle.height;
+        if (text == undefined){
+            rectangle.text = "";
+        }
+        else{
+            rectangle.text = text;
+        }
+        if (color == undefined){
+            rectangle.color = "#FFFFFF";
+        }
+        else{
+            rectangle.color = color;
+        }
+        if (outlined == undefined){
+            rectangle.outlined = false;
+        }
+        else{
+            rectangle.outlined = outlined;
+        }
+        rectangle.drag = false;
+        rectangle.draw = function(){
+            ex.graphics.ctx.fillStyle = color;
+            if (!rectangle.outlined){
+                ex.graphics.ctx.fillRect(rectangle.left,
+                    rectangle.top, rectangle.width, rectangle.height);
+            }
+            else{
+             ex.graphics.ctx.strokeRect(rectangle.left,
+                    rectangle.top, rectangle.width, rectangle.height);   
+            }
+        };
+        rectangle.clicked = function(x, y){
+            return (x > rectangle.left && x < rectangle.right && y > rectangle.top && y < rectangle.bottom);
+        };
+        rectangle.move = function(dx, dy){
+            rectangle.left += dx;
+            rectangle.top += dy;
+            rectangle.right = rectangle.left + rectangle.width;
+            rectangle.bottom = rectangle.top + rectangle.height;
+        };
+        return rectangle;
+    }
+
     function playPracticeGame(){
         //Randomly Generate an element and type
+        var elementType = randomIndex(0, listOfAllTypes.length - 1);
+        var actualType;
+        if (elementType == 0){
+            actualType = "string";
+        }
+        else if (elementType == 1){
+            actualType = "int";
+        }
+        else if (elementType == 2){
+            actualType = "float";
+        } 
+        else{
+            actualType = "bool";
+        }
+        var actualElementList = listOfAllTypes[elementType];
+        console.log(actualElementList);
+        var actualElement = actualElementList[randomIndex(0, actualElementList.length - 1)];
+        console.log(actualElement);
+        ex.createParagraph(ex.width() / 3, ex.height() / 2, actualElement, {
+            size: 'xlarge'
+        });
+        ex.createParagraph(ex.width() / 10, ex.height() / 10, "Select the correct type")
         //Create graphics as needed
+        var placementRectangle = createRectangleObject(ex.width()/2, ex.height()/2, 100, 75, "#00FFFF", "wow", true);
+        placementRectangle.draw();
+        var option1 = createRectangleObject(ex.width()/3, 3 * ex.height() / 4, 100, 75, "#33FFAA");
+        option1.draw();
         //Check for mousedown (function needed)
         //Drag and drop
         //Check for correctness
@@ -140,11 +222,11 @@ var main = function(ex) {
         }
         else{
             //Add in feedback for wrong answers
-            if (expectedResult == "string" && value[0:3] == "chr"){
+            if (expectedResult == "string" && expectedResult.slice(0,3) == "chr"){
                 //we know it is a misunderstanding of what chr is
                 return;
             }
-            else if (expectedResult == "int" && value[0:3] == "ord"){
+            else if (expectedResult == "int" && expectedResult.slice(0,3) == "ord"){
                 //Misunderstanding of what ord is
                 return;
             }
@@ -168,6 +250,7 @@ var main = function(ex) {
         return;
     }
 
+//Woo switch cases
     switch (ex.data.meta.mode){
         case "practice":
             runPracticeMode(ex)
