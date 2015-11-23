@@ -58,7 +58,7 @@ var main = function(ex) {
 
 
 
-    var listOfStringTypes = ["a", "A", "hello", "chr(97)", "\'0\'"];
+    var listOfStringTypes = ["a", "A", "hello", "chr(97)", "\'0\'", "\'True\'"];
     var listOfIntTypes = ["13", "42", "-124", "ord('a')", "0"]; //Can dynamically do these and will add later
     var listOfFloatTypes = ["1.", "42.9999999999", "0.1", "4.2"];
     var listOfBoolTypes = ["True", "False", "1 and 0", "True or False"];
@@ -103,7 +103,7 @@ var main = function(ex) {
         var beginButton = ex.createButton(0, 0, "OK");
         beginButton.on("click", function() {
             beginBox.remove();
-            playQuizGame();
+            playPracticeGame();
         })
         var beginBox = textbox112("Select and drop the correct type of object <span> BUTTON </span>");
         insertButtonTextbox112(beginBox, beginButton, "BUTTON");
@@ -139,7 +139,26 @@ var main = function(ex) {
             }
         }
         else{
-            //Add in feedback
+            //Add in feedback for wrong answers
+            if (expectedResult == "string" && value[0:3] == "chr"){
+                //we know it is a misunderstanding of what chr is
+                return;
+            }
+            else if (expectedResult == "int" && value[0:3] == "ord"){
+                //Misunderstanding of what ord is
+                return;
+            }
+            else if (expectedResult == "string"){
+                //Misunderstanding of what makes a string a string
+                //Check for other types but in string form i.e True
+            }
+            else if (expectedResult == "int"){
+                //Misunderstanding of what makes an int an int
+            }
+            else if (expectedResult == "bool"){
+                //Misunderstanding of what makes a bool a bool
+            }
+
             return
         }
     }
