@@ -165,6 +165,49 @@ var main = function(ex) {
         return rectangle;
     }
 
+    var dragInfo = {};
+    dragInfo.rect = [];
+    dragInfo.mouseLastX = 0;
+    dragInfo.mouseLastY = 0;
+
+    dragInfo.mousedown = function(event) {
+        var x = event.offsetX;
+        var y = event.offsetY;
+        if (dragInfo.rect.clicked(x,y)) {
+            dragInfo.rect.drag = true;
+            dragInfo.mouseLastX = x;
+            dragInfo.mouseLastY = y;
+        }
+        //bind mousemove and mouseup
+        ex.graphics.on("mousemove",dragInfo.mousemove);
+        ex.graphics.on("mouseup",dragInfo.mouseup);
+    };
+
+    dragInfo.mousemove = function(event) {
+        if (dragInfo.rect.drag) {
+            //move the rect
+            console.log("oooh");
+            var x = event.offsetX;
+            var y = event.offsetY;
+            var xChange = x - dragInfo.mouseLastX; 
+            var yChange = y - dragInfo.mouseLastY; 
+            dragInfo.rect.move(xChange,yChange);
+            dragInfo.mouseLastX = x;
+            dragInfo.mouseLastY = y;
+
+            //redraw
+            drawAll();
+        }
+    };
+
+    dragInfo.mouseup = function(event) {
+        dragInfo.rect.drag = false;
+        ex.graphics.off("mousemove",dragInfo.mousemove);
+        ex.graphics.off("mouseup",dragInfo.mouseup);
+    };
+
+    //bind mousedown
+    ex.graphics.on("mousedown",dragInfo.mousedown);
     function playPracticeGame(){
         //Randomly Generate an element and type
         var elementType = randomIndex(0, listOfAllTypes.length - 1);
@@ -191,14 +234,22 @@ var main = function(ex) {
         ex.createParagraph(ex.width() / 10, ex.height() / 10, "Select the correct type")
         //Create graphics as needed
         var placementRectangle = createRectangleObject(ex.width()/2, ex.height()/2, 100, 75, "#00FFFF", "wow", true);
+        dragInfo.rect += placementRectangle;
         placementRectangle.draw();
         var option1 = createRectangleObject(ex.width()/3, 3 * ex.height() / 4, 100, 75, "#33FFAA");
         option1.draw();
-        //Check for mousedown (function needed)
+        //Need to append to list rather than overwrite
+        dragInfo.rect = option1;
         //Drag and drop
         //Check for correctness
         //Create feedback as needed
         return;
+    }
+
+    function drawAll(){
+        ex.graphics.ctx.clearRect(0,0,ex.width(),ex.height());
+        dragInfo.rect.draw();
+        //Need to draw everything once appended
     }
 
     var showAgain = true;
