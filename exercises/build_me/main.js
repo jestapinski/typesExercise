@@ -18,6 +18,7 @@ Still To Do:
 -Bigger text in buckets
 -Save state
 -Wrong answer feedback
+-Resetting incorrect drops
 -Practice Mode
 -Quiz Delay Mode
 -Quiz Scoring
@@ -351,23 +352,84 @@ var main = function(ex) {
         }
         else{
             //Add in feedback for wrong answers
-            if (expectedResult == "string" && expectedResult.slice(0,3) == "chr"){
+            if (expectedResult == "String" && expectedResult.slice(0,3) == "chr"){
                 //we know it is a misunderstanding of what chr is
+                var str = "What type does \'chr(integer)\' return? <span>BUTTON</span>"
+                var chrButton = ex.createButton(0, 0, "OK");
+                chrButton.on("click", function(){
+                    chrBox.remove()
+                })
+                var chrBox = textbox112(str, {
+                    color: 'red'
+                })
+                insertButtonTextbox112(chrBox, chrButton, 'BUTTON');
                 return;
             }
-            else if (expectedResult == "int" && expectedResult.slice(0,3) == "ord"){
+            else if (expectedResult == "Integer" && expectedResult.slice(0,3) == "ord"){
                 //Misunderstanding of what ord is
+                var str = "What type does \'ord(string)\' return? <span>BUTTON</span>"
+                var ordButton = ex.createButton(0, 0, "OK");
+                ordButton.on("click", function(){
+                    ordBox.remove()
+                })
+                var ordBox = textbox112(str, {
+                    color: 'red'
+                })
+                insertButtonTextbox112(ordBox, ordButton, 'BUTTON');
                 return;
             }
-            else if (expectedResult == "string"){
+            else if (expectedResult == "String"){
                 //Misunderstanding of what makes a string a string
                 //Check for other types but in string form i.e True
+                var str = "Incorrect. What do the \" \" mean? <span>BUTTON</span>"
+                var strButton = ex.createButton(0, 0, "OK");
+                strButton.on("click", function(){
+                    strBox.remove()
+                })
+                var strBox = textbox112(str, {
+                    color: 'red'
+                })
+                insertButtonTextbox112(strBox, strButton, 'BUTTON');
+                return;
             }
-            else if (expectedResult == "int"){
+            else if (expectedResult == "Integer"){
                 //Misunderstanding of what makes an int an int
+                var str = "Incorrect. Is this a whole number? <span>BUTTON</span>"
+                var intButton = ex.createButton(0, 0, "OK");
+                intButton.on("click", function(){
+                    intBox.remove()
+                })
+                var intBox = textbox112(str, {
+                    color: 'red'
+                })
+                insertButtonTextbox112(intBox, intButton, 'BUTTON');
+                return;
             }
-            else if (expectedResult == "bool"){
+            else if (expectedResult == "Float"){
+                //Misunderstanding of what makes an int an int
+                var str = "Incorrect. Is this a floating point number? <span>BUTTON</span>"
+                var floatButton = ex.createButton(0, 0, "OK");
+                floatButton.on("click", function(){
+                    floatBox.remove()
+                })
+                var floatBox = textbox112(str, {
+                    color: 'red'
+                })
+                insertButtonTextbox112(floatBox, floatButton, 'BUTTON');
+                return;
+            }
+            else if (expectedResult == "Boolean"){
                 //Misunderstanding of what makes a bool a bool
+                var str = "Incorrect. Is this a True or False quantity? <span>BUTTON</span>"
+                var boolButton = ex.createButton(0, 0, "OK");
+                boolButton.on("click", function(){
+                    boolBox.remove()
+                })
+                var boolBox = textbox112(str, {
+                    color: 'red'
+                })
+                insertButtonTextbox112(boolBox, boolButton, 'BUTTON');
+                return;
             }
 
             return
