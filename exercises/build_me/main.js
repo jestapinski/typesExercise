@@ -1,7 +1,31 @@
 /** 
  * @file Types Exercise
- * @author 
+ * @author  Jordan Stapinski, Lilian Chin
  */
+
+ //Save data needed:
+/*
+    Exercise number
+    Current Score
+    Current Element
+    Current Element Type
+
+
+
+Still To Do:
+-Overall Cleaner UI
+-2nd Mode for dropping elements by type into bucket
+-Bigger text in buckets
+-Save state
+-Wrong answer feedback
+-Practice Mode
+-Quiz Delay Mode
+-Quiz Scoring
+-Fix locations to account for various screen sizes (not sure how good this is right now)
+*/
+
+
+
 var main = function(ex) {
     //always quiz-immediate
     console.log(ex.data.meta.mode);
@@ -209,12 +233,36 @@ var main = function(ex) {
         }
     };
 
+    function rectsCollide(rect1, rect2){
+        return ((rect1.left > rect2.left && 
+            rect1.left < rect2.right) ||
+            (rect1.right > rect2.left && 
+                rect1.right < rect2.right)) && 
+            ((rect1.top > rect2.top &&
+                rect1.top < rect2.bottom) ||
+            (rect1.bottom > rect2.top &&
+                rect1.bottom < rect2.bottom));
+
+    }
+
     dragInfo.mouseup = function(event) {
         for (var i = 0; i < dragInfo.rect.length; i++){
             if (dragInfo.rect[i].drag){
-                dragInfo.rect[i].drag = false;
-                provideFeedback(dragInfo.value, dragInfo.typeOfElem, dragInfo.rect[i].text);
+                //Try to snap into place
+                if (rectsCollide(dragInfo.rect[i], dragInfo.rect[0])){
+                    dragInfo.rect[i].drag = false;
+                    dragInfo.rect[i].left = dragInfo.rect[0].left;
+                    dragInfo.rect[i].top = dragInfo.rect[0].top;
+                    dragInfo.rect[i].right = dragInfo.rect[0].right;
+                    dragInfo.rect[i].bottom = dragInfo.rect[0].bottom;
+                    drawAll();
+                    provideFeedback(dragInfo.value, dragInfo.typeOfElem, dragInfo.rect[i].text);
+                }
+                else{
+                    //reset original box location
+                }
             }
+            dragInfo.rect[i].drag = false;
         }
         ex.graphics.off("mousemove",dragInfo.mousemove);
         ex.graphics.off("mouseup",dragInfo.mouseup);
@@ -268,19 +316,14 @@ var main = function(ex) {
         var option4 = createRectangleObject(option3.left + 2* option3.width, 3 * ex.height()/4, 100, 75, "#FF7777", "Boolean");
         dragInfo.rect.push(option4);
         option4.draw();
-
-        //Check for correctness
-        //Create feedback as needed
         return;
-    }
+}
 
     function drawAll(){
         ex.graphics.ctx.clearRect(0,0,ex.width(),ex.height());
         for (var i = 0; i < dragInfo.rect.length; i++){
             dragInfo.rect[i].draw();
         }
-        // dragInfo.rect.draw();
-        //Need to draw everything once appended
     }
 
     var showAgain = true;
