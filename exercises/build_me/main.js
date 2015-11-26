@@ -147,6 +147,11 @@ var main = function(ex) {
             if (!rectangle.outlined){
                 ex.graphics.ctx.fillRect(rectangle.left,
                     rectangle.top, rectangle.width, rectangle.height);
+                ex.graphics.ctx.fillStyle = "black";
+                ex.graphics.ctx.font = "22 px Arial";
+                ex.graphics.ctx.textAlgn = "center";
+                ex.graphics.ctx.textBaseline = "middle";
+                ex.graphics.ctx.fillText(rectangle.text, rectangle.left, rectangle.top);
             }
             else{
              ex.graphics.ctx.strokeRect(rectangle.left,
@@ -173,10 +178,12 @@ var main = function(ex) {
     dragInfo.mousedown = function(event) {
         var x = event.offsetX;
         var y = event.offsetY;
-        if (dragInfo.rect.clicked(x,y)) {
-            dragInfo.rect.drag = true;
-            dragInfo.mouseLastX = x;
-            dragInfo.mouseLastY = y;
+        for (var i = 0; i < dragInfo.rect.length; i++){
+            if (dragInfo.rect[i].clicked(x,y) && dragInfo.rect[i].outlined != true) {
+                dragInfo.rect[i].drag = true;
+                dragInfo.mouseLastX = x;
+                dragInfo.mouseLastY = y;
+            }
         }
         //bind mousemove and mouseup
         ex.graphics.on("mousemove",dragInfo.mousemove);
@@ -184,24 +191,31 @@ var main = function(ex) {
     };
 
     dragInfo.mousemove = function(event) {
-        if (dragInfo.rect.drag) {
-            //move the rect
-            console.log("oooh");
-            var x = event.offsetX;
-            var y = event.offsetY;
-            var xChange = x - dragInfo.mouseLastX; 
-            var yChange = y - dragInfo.mouseLastY; 
-            dragInfo.rect.move(xChange,yChange);
-            dragInfo.mouseLastX = x;
-            dragInfo.mouseLastY = y;
+        for (var i = 0; i < dragInfo.rect.length; i++){
+            if (dragInfo.rect[i].drag) {
+                //move the rect
+                // console.log("oooh");
+                var x = event.offsetX;
+                var y = event.offsetY;
+                var xChange = x - dragInfo.mouseLastX; 
+                var yChange = y - dragInfo.mouseLastY; 
+                dragInfo.rect[i].move(xChange,yChange);
+                dragInfo.mouseLastX = x;
+                dragInfo.mouseLastY = y;
 
-            //redraw
-            drawAll();
+                //redraw
+                drawAll();
+            }
         }
     };
 
     dragInfo.mouseup = function(event) {
-        dragInfo.rect.drag = false;
+        for (var i = 0; i < dragInfo.rect.length; i++){
+            if (dragInfo.rect[i].drag){
+                dragInfo.rect[i].drag = false;
+                provideFeedback(dragInfo.value, dragInfo.typeOfElem, dragInfo.rect[i].text);
+            }
+        }
         ex.graphics.off("mousemove",dragInfo.mousemove);
         ex.graphics.off("mouseup",dragInfo.mouseup);
     };
@@ -213,34 +227,48 @@ var main = function(ex) {
         var elementType = randomIndex(0, listOfAllTypes.length - 1);
         var actualType;
         if (elementType == 0){
-            actualType = "string";
+            actualType = "String";
         }
         else if (elementType == 1){
-            actualType = "int";
+            actualType = "Integer";
         }
         else if (elementType == 2){
-            actualType = "float";
+            actualType = "Float";
         } 
         else{
-            actualType = "bool";
+            actualType = "Boolean";
         }
         var actualElementList = listOfAllTypes[elementType];
         console.log(actualElementList);
         var actualElement = actualElementList[randomIndex(0, actualElementList.length - 1)];
         console.log(actualElement);
+        dragInfo.value = actualElement;
+        dragInfo.typeOfElem = actualType; 
         ex.createParagraph(ex.width() / 3, ex.height() / 2, actualElement, {
             size: 'xlarge'
         });
         ex.createParagraph(ex.width() / 10, ex.height() / 10, "Select the correct type")
         //Create graphics as needed
         var placementRectangle = createRectangleObject(ex.width()/2, ex.height()/2, 100, 75, "#00FFFF", "wow", true);
-        dragInfo.rect += placementRectangle;
+        dragInfo.rect.push(placementRectangle);
         placementRectangle.draw();
-        var option1 = createRectangleObject(ex.width()/3, 3 * ex.height() / 4, 100, 75, "#33FFAA");
+        var option1 = createRectangleObject(ex.width()/4, 3 * ex.height() / 4, 100, 75, "#33FFAA", "Integer");
         option1.draw();
         //Need to append to list rather than overwrite
-        dragInfo.rect = option1;
+        console.log(dragInfo.rect);
+        dragInfo.rect.push(option1);
+        var option2 = createRectangleObject(option1.left + 2* option1.width, 3 * ex.height()/4, 100, 75, "#AAAAAA", "String");
+        dragInfo.rect.push(option2);
+        option2.draw();
         //Drag and drop
+        var option3 = createRectangleObject(option2.left + 2* option2.width, 3 * ex.height()/4, 100, 75, "#7777FF", "Float");
+        dragInfo.rect.push(option3);
+        option3.draw();
+
+        var option4 = createRectangleObject(option3.left + 2* option3.width, 3 * ex.height()/4, 100, 75, "#FF7777", "Boolean");
+        dragInfo.rect.push(option4);
+        option4.draw();
+
         //Check for correctness
         //Create feedback as needed
         return;
@@ -248,13 +276,20 @@ var main = function(ex) {
 
     function drawAll(){
         ex.graphics.ctx.clearRect(0,0,ex.width(),ex.height());
-        dragInfo.rect.draw();
+        for (var i = 0; i < dragInfo.rect.length; i++){
+            dragInfo.rect[i].draw();
+        }
+        // dragInfo.rect.draw();
         //Need to draw everything once appended
     }
 
     var showAgain = true;
 
     function provideFeedback(value, expectedResult, actualResult){
+        console.log("here");
+        console.log(value);
+        console.log(expectedResult);
+        console.log(actualResult);
         if (expectedResult == actualResult){
             if (showAgain){
                 var hideButton = ex.createButton(0, 0, "Hide Correct Feedback");
