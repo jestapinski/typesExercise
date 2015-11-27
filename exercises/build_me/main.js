@@ -14,11 +14,10 @@
 
 Still To Do:
 -Overall Cleaner UI
+    -Keep rectangles in goal until OK is clicked
+    -Bigger, cleaner look all around
 -2nd Mode for dropping elements by type into bucket
--Bigger text in buckets
 -Save state
--Wrong answer feedback
--Resetting incorrect drops
 -Practice Mode
 -Quiz Delay Mode
 -Quiz Scoring
@@ -93,6 +92,15 @@ var main = function(ex) {
 
     function runPracticeMode(){
         alert("Practice Mode");
+        var newButton = ex.createButton(0, 0, "OK");
+        newButton.on("click", function() {
+            console.log("such button very 539");
+            newBox.remove();
+            secondInstructionBox();
+        })
+        var newBox = textbox112("Here we will talk about Python Types <span>BUTTON</span>", {
+            color: "blue"
+        });
         return;
     }
 
@@ -109,7 +117,7 @@ var main = function(ex) {
         //     color: "blue"
         // });
         playGuideBox();
-        insertButtonTextbox112(newBox, newButton, "BUTTON");
+        // insertButtonTextbox112(newBox, newButton, "BUTTON");
         return;
     }
 
@@ -143,7 +151,9 @@ var main = function(ex) {
     function createRectangleObject(left, top, width, height, color, text, outlined){
         var rectangle = {};
         rectangle.top = top;
+        rectangle.initialTop = top;
         rectangle.left = left;
+        rectangle.initialLeft = left;
         rectangle.width = width;
         rectangle.height = height;
         rectangle.right = rectangle.left + rectangle.width;
@@ -176,7 +186,7 @@ var main = function(ex) {
                 ex.graphics.ctx.font = "22 px Arial";
                 ex.graphics.ctx.textAlgn = "center";
                 ex.graphics.ctx.textBaseline = "middle";
-                ex.graphics.ctx.fillText(rectangle.text, rectangle.left, rectangle.top);
+                ex.graphics.ctx.fillText(rectangle.text, rectangle.left + rectangle.width/2, rectangle.top + rectangle.height/2);
             }
             else{
              ex.graphics.ctx.strokeRect(rectangle.left,
@@ -257,9 +267,14 @@ var main = function(ex) {
                     dragInfo.rect[i].right = dragInfo.rect[0].right;
                     dragInfo.rect[i].bottom = dragInfo.rect[0].bottom;
                     drawAll();
-                    provideFeedback(dragInfo.value, dragInfo.typeOfElem, dragInfo.rect[i].text);
+                    provideFeedback(dragInfo.value, dragInfo.typeOfElem, dragInfo.rect[i].text, i);
                 }
                 else{
+                    dragInfo.rect[i].left = dragInfo.rect[i].initialLeft;
+                    dragInfo.rect[i].top = dragInfo.rect[i].initialTop;
+                    dragInfo.rect[i].right = dragInfo.rect[i].left + dragInfo.rect[i].width;
+                    dragInfo.rect[i].bottom = dragInfo.rect[i].top + dragInfo.rect[i].height;
+                    drawAll();
                     //reset original box location
                 }
             }
@@ -272,6 +287,9 @@ var main = function(ex) {
     //bind mousedown
     ex.graphics.on("mousedown",dragInfo.mousedown);
     function playPracticeGame(){
+        dragInfo.rect = [];
+        dragInfo.value = undefined;
+        dragInfo.typeOfElem = undefined;
         //Randomly Generate an element and type
         var elementType = randomIndex(0, listOfAllTypes.length - 1);
         var actualType;
@@ -293,43 +311,48 @@ var main = function(ex) {
         console.log(actualElement);
         dragInfo.value = actualElement;
         dragInfo.typeOfElem = actualType; 
-        ex.createParagraph(ex.width() / 3, ex.height() / 2, actualElement, {
-            size: 'xlarge'
-        });
-        ex.createParagraph(ex.width() / 10, ex.height() / 10, "Select the correct type")
+        ex.graphics.ctx.clearRect(0,0,ex.width(),ex.height());
+        
         //Create graphics as needed
         var placementRectangle = createRectangleObject(ex.width()/2, ex.height()/2, 100, 75, "#00FFFF", "wow", true);
         dragInfo.rect.push(placementRectangle);
         placementRectangle.draw();
         var option1 = createRectangleObject(ex.width()/4, 3 * ex.height() / 4, 100, 75, "#33FFAA", "Integer");
-        option1.draw();
+        // option1.draw();
         //Need to append to list rather than overwrite
         console.log(dragInfo.rect);
         dragInfo.rect.push(option1);
         var option2 = createRectangleObject(option1.left + 2* option1.width, 3 * ex.height()/4, 100, 75, "#AAAAAA", "String");
         dragInfo.rect.push(option2);
-        option2.draw();
+        // option2.draw();
         //Drag and drop
         var option3 = createRectangleObject(option2.left + 2* option2.width, 3 * ex.height()/4, 100, 75, "#7777FF", "Float");
         dragInfo.rect.push(option3);
-        option3.draw();
+        // option3.draw();
 
         var option4 = createRectangleObject(option3.left + 2* option3.width, 3 * ex.height()/4, 100, 75, "#FF7777", "Boolean");
         dragInfo.rect.push(option4);
-        option4.draw();
+        // option4.draw();
+        drawAll();
         return;
 }
 
     function drawAll(){
+        ex.graphics.ctx.fillStyle = "black";
+        ex.graphics.ctx.font = "24px Arial Bold";
+        ex.graphics.ctx.textAlign = "center";
         ex.graphics.ctx.clearRect(0,0,ex.width(),ex.height());
         for (var i = 0; i < dragInfo.rect.length; i++){
             dragInfo.rect[i].draw();
         }
+
+        ex.graphics.ctx.fillText(dragInfo.value, ex.width() / 3, ex.height() / 2);
+        ex.graphics.ctx.fillText("Select the correct type", ex.width() / 10, ex.height() / 10);
     }
 
     var showAgain = true;
 
-    function provideFeedback(value, expectedResult, actualResult){
+    function provideFeedback(value, expectedResult, actualResult, i){
         console.log("here");
         console.log(value);
         console.log(expectedResult);
@@ -349,6 +372,9 @@ var main = function(ex) {
                 insertButtonTextbox112(correctBox, hideButton, "BTN1");
                 insertButtonTextbox112(correctBox, nahButton, "BTN2");
             }
+            ex.graphics.ctx.clearRect(0,0,ex.width(),ex.height());
+            playPracticeGame();
+            return;
         }
         else{
             //Add in feedback for wrong answers
@@ -357,13 +383,12 @@ var main = function(ex) {
                 var str = "What type does \'chr(integer)\' return? <span>BUTTON</span>"
                 var chrButton = ex.createButton(0, 0, "OK");
                 chrButton.on("click", function(){
-                    chrBox.remove()
+                    chrBox.remove();
                 })
                 var chrBox = textbox112(str, {
                     color: 'red'
                 })
                 insertButtonTextbox112(chrBox, chrButton, 'BUTTON');
-                return;
             }
             else if (expectedResult == "Integer" && expectedResult.slice(0,3) == "ord"){
                 //Misunderstanding of what ord is
@@ -376,7 +401,6 @@ var main = function(ex) {
                     color: 'red'
                 })
                 insertButtonTextbox112(ordBox, ordButton, 'BUTTON');
-                return;
             }
             else if (expectedResult == "String"){
                 //Misunderstanding of what makes a string a string
@@ -390,7 +414,6 @@ var main = function(ex) {
                     color: 'red'
                 })
                 insertButtonTextbox112(strBox, strButton, 'BUTTON');
-                return;
             }
             else if (expectedResult == "Integer"){
                 //Misunderstanding of what makes an int an int
@@ -403,7 +426,6 @@ var main = function(ex) {
                     color: 'red'
                 })
                 insertButtonTextbox112(intBox, intButton, 'BUTTON');
-                return;
             }
             else if (expectedResult == "Float"){
                 //Misunderstanding of what makes an int an int
@@ -416,7 +438,6 @@ var main = function(ex) {
                     color: 'red'
                 })
                 insertButtonTextbox112(floatBox, floatButton, 'BUTTON');
-                return;
             }
             else if (expectedResult == "Boolean"){
                 //Misunderstanding of what makes a bool a bool
@@ -429,10 +450,14 @@ var main = function(ex) {
                     color: 'red'
                 })
                 insertButtonTextbox112(boolBox, boolButton, 'BUTTON');
-                return;
             }
-
-            return
+            // ex.graphics.ctx.clearRect(0,0,ex.width(),ex.height());
+            dragInfo.rect[i].left = dragInfo.rect[i].initialLeft;
+            dragInfo.rect[i].top = dragInfo.rect[i].initialTop;
+            dragInfo.rect[i].right = dragInfo.rect[i].left + dragInfo.rect[i].width;
+            dragInfo.rect[i].bottom = dragInfo.rect[i].top + dragInfo.rect[i].height;
+            drawAll();
+            return;
         }
     }
 
