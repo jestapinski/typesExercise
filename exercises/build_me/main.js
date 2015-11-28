@@ -14,13 +14,12 @@
 
 Still To Do:
 -Overall Cleaner UI
-    -Keep rectangles in goal until OK is clicked
-    -Bigger, cleaner look all around
+    -Constantly Redrawing Question Text
 -2nd Mode for dropping elements by type into bucket
+    -Practice Mode
+    -Quiz Delay Mode
 -Save state
--Practice Mode
--Quiz Delay Mode
--Quiz Scoring
+-Quiz Scoring (Kinda done, need to figure out end of quiz to report)
 -Fix locations to account for various screen sizes (not sure how good this is right now)
 */
 
@@ -30,6 +29,7 @@ var main = function(ex) {
     
     //temporary variable to figure out what to draw (we can figure out a better way) later
     var practice = true;
+    // ex.data.meta.mode = "practice";
 
     //always quiz-immediate
     console.log(ex.data.meta.mode);
@@ -85,6 +85,9 @@ var main = function(ex) {
         };
 
 
+    var userScore = 0;
+    var userAttempts = 0;
+    //Keep track of score regardless, only care if in quiz-delay or immediate mode
 
     var listOfStringTypes = ["\'a\'", "\'A\'", "\'hello\'", "chr(97)", "\'0\'", "\'True\'",
                              "1 and \'hi'\'", "0 or \'and\'", "\'112\' or 112", 
@@ -111,6 +114,7 @@ var main = function(ex) {
         var newBox = textbox112("Here we will talk about Python Types <span>BUTTON</span>", {
             color: "blue"
         });
+        insertButtonTextbox112(newBox, newButton, "BUTTON");
         return;
     }
 
@@ -526,10 +530,11 @@ var main = function(ex) {
 
     function providePracticeFeedback(value, expectedResult, actualResult, i) {
         console.log("here");
-        console.log(value);
-        console.log(expectedResult);
-        console.log(actualResult);
+        console.log(userAttempts);
+        console.log(userScore);
+        userAttempts++;
         if (expectedResult == actualResult) {
+            userScore++;
             if (showAgain){
                 var hideButton = ex.createButton(0, 0, "Hide Correct Feedback");
                 hideButton.on("click", function() {
@@ -646,7 +651,8 @@ var main = function(ex) {
     }
 
     function runQuizDelayMode(){
-        alert("Quizzing on a Delay")
+        alert("Quizzing on a Delay");
+        playGuideBox();
         return;
     }
 
