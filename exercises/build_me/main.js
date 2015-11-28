@@ -281,6 +281,14 @@ var main = function(ex) {
 
     };
 
+    function resetBox(box){
+        box.left = box.initialLeft;
+        box.top = box.initialTop;
+        box.right = box.left + box.width;
+        box.bottom = box.top + box.height;
+        drawAll();
+    }
+
     dragInfo.mouseup = function(event) {
         for (var i = 0; i < dragInfo.rect.length; i++){
             if (dragInfo.rect[i].drag){
@@ -299,11 +307,7 @@ var main = function(ex) {
                       //}
                 }
                 else {
-                    dragInfo.rect[i].left = dragInfo.rect[i].initialLeft;
-                    dragInfo.rect[i].top = dragInfo.rect[i].initialTop;
-                    dragInfo.rect[i].right = dragInfo.rect[i].left + dragInfo.rect[i].width;
-                    dragInfo.rect[i].bottom = dragInfo.rect[i].top + dragInfo.rect[i].height;
-                    drawAll();
+                    resetBox(dragInfo.rect[i]);
                     //reset original box location
                 }
             }
@@ -531,17 +535,23 @@ var main = function(ex) {
                 hideButton.on("click", function() {
                     showAgain = false;
                     correctBox.remove();
+                    ex.graphics.ctx.clearRect(0,0,ex.width(),ex.height());
+                    playPracticeGame();
                 })
                 var nahButton = ex.createButton(0, 0, "OK");
                 nahButton.on("click", function(){
                     correctBox.remove();
+                    ex.graphics.ctx.clearRect(0,0,ex.width(),ex.height());
+                    playPracticeGame();
                 })
                 var correctBox = textbox112("Correct! <span>BTN1</span> <span>BTN2</span>");
                 insertButtonTextbox112(correctBox, hideButton, "BTN1");
                 insertButtonTextbox112(correctBox, nahButton, "BTN2");
             }
-            ex.graphics.ctx.clearRect(0,0,ex.width(),ex.height());
-            playPracticeGame();
+            else{
+                ex.graphics.ctx.clearRect(0,0,ex.width(),ex.height());
+                playPracticeGame(); 
+            }
             return;
         }
         else {
@@ -552,6 +562,7 @@ var main = function(ex) {
                 var chrButton = ex.createButton(0, 0, "OK");
                 chrButton.on("click", function(){
                     chrBox.remove();
+                    resetBox(dragInfo.rect[i]);
                 })
                 var chrBox = textbox112(str, {
                     color: 'red'
@@ -563,7 +574,8 @@ var main = function(ex) {
                 var str = "What type does \'ord(string)\' return? <span>BUTTON</span>"
                 var ordButton = ex.createButton(0, 0, "OK");
                 ordButton.on("click", function(){
-                    ordBox.remove()
+                    ordBox.remove();
+                    resetBox(dragInfo.rect[i]);
                 })
                 var ordBox = textbox112(str, {
                     color: 'red'
@@ -576,7 +588,8 @@ var main = function(ex) {
                 var str = "Incorrect. What do the \" \" mean? <span>BUTTON</span>"
                 var strButton = ex.createButton(0, 0, "OK");
                 strButton.on("click", function(){
-                    strBox.remove()
+                    strBox.remove();
+                    resetBox(dragInfo.rect[i]);
                 })
                 var strBox = textbox112(str, {
                     color: 'red'
@@ -588,7 +601,8 @@ var main = function(ex) {
                 var str = "Incorrect. Is this a whole number? <span>BUTTON</span>"
                 var intButton = ex.createButton(0, 0, "OK");
                 intButton.on("click", function(){
-                    intBox.remove()
+                    intBox.remove();
+                    resetBox(dragInfo.rect[i]);
                 })
                 var intBox = textbox112(str, {
                     color: 'red'
@@ -600,7 +614,8 @@ var main = function(ex) {
                 var str = "Incorrect. Is this a floating point number? <span>BUTTON</span>"
                 var floatButton = ex.createButton(0, 0, "OK");
                 floatButton.on("click", function(){
-                    floatBox.remove()
+                    floatBox.remove();
+                    resetBox(dragInfo.rect[i]);
                 })
                 var floatBox = textbox112(str, {
                     color: 'red'
@@ -612,7 +627,8 @@ var main = function(ex) {
                 var str = "Incorrect. Is this a True or False quantity? <span>BUTTON</span>"
                 var boolButton = ex.createButton(0, 0, "OK");
                 boolButton.on("click", function(){
-                    boolBox.remove()
+                    boolBox.remove();
+                    resetBox(dragInfo.rect[i]);
                 })
                 var boolBox = textbox112(str, {
                     color: 'red'
@@ -620,10 +636,6 @@ var main = function(ex) {
                 insertButtonTextbox112(boolBox, boolButton, 'BUTTON');
             }
             // ex.graphics.ctx.clearRect(0,0,ex.width(),ex.height());
-            dragInfo.rect[i].left = dragInfo.rect[i].initialLeft;
-            dragInfo.rect[i].top = dragInfo.rect[i].initialTop;
-            dragInfo.rect[i].right = dragInfo.rect[i].left + dragInfo.rect[i].width;
-            dragInfo.rect[i].bottom = dragInfo.rect[i].top + dragInfo.rect[i].height;
             drawAll();
             return;
         }
