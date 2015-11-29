@@ -772,18 +772,38 @@ var main = function(ex) {
                 //i-8 because the list containing the values is indexed 0-8
                 if (dragInfo.typeOfElem[i-8] == "Integer") { 
                     intCorrect++;
+                } else {
+                    ex.graphics.ctx.lineWidth = "3";
+                    ex.graphics.ctx.strokeStyle = "red";
+                    ex.graphics.ctx.strokeRect(dragInfo.rect[i].left, dragInfo.rect[i].top,
+                                               dragInfo.rect[i].width, dragInfo.rect[i].height);
                 }
             } if (dragInfo.rect[i].left == dragInfo.rect[2].left) {
                 if (dragInfo.typeOfElem[i-8] == "Boolean") {
                     boolCorrect++;
+                } else {
+                    ex.graphics.ctx.lineWidth = "3";
+                    ex.graphics.ctx.strokeStyle = "red";
+                    ex.graphics.ctx.strokeRect(dragInfo.rect[i].left, dragInfo.rect[i].top,
+                                               dragInfo.rect[i].width, dragInfo.rect[i].height);
                 }
             } else if (dragInfo.rect[i].left == dragInfo.rect[4].left) {
                 if (dragInfo.typeOfElem[i-8] == "String") {
                     strCorrect++;
+                } else {
+                    ex.graphics.ctx.lineWidth = "3";
+                    ex.graphics.ctx.strokeStyle = "red";
+                    ex.graphics.ctx.strokeRect(dragInfo.rect[i].left, dragInfo.rect[i].top,
+                                               dragInfo.rect[i].width, dragInfo.rect[i].height);
                 }
             } else if (dragInfo.rect[i].left == dragInfo.rect[6].left) {
                 if (dragInfo.typeOfElem[i-8] == "Float") {
                     floatCorrect++;
+                } else {
+                    ex.graphics.ctx.lineWidth = "3";
+                    ex.graphics.ctx.strokeStyle = "red";
+                    ex.graphics.ctx.strokeRect(dragInfo.rect[i].left, dragInfo.rect[i].top,
+                                               dragInfo.rect[i].width, dragInfo.rect[i].height);
                 }
             }
         }
