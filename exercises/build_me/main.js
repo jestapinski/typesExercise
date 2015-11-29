@@ -15,9 +15,8 @@
 Still To Do:
 -Overall Cleaner UI
     -Constantly Redrawing Question Text
--2nd Mode for dropping elements by type into bucket
-    -Practice Mode
-    -Quiz Delay Mode
+-Practice Mode
+-Quiz Delay Mode
 -Save state
 -Quiz Scoring (Kinda done, need to figure out end of quiz to report)
 -Fix locations to account for various screen sizes (not sure how good this is right now)
@@ -151,6 +150,8 @@ var main = function(ex) {
         var beginButton = ex.createButton(0, 0, "OK");
         beginButton.on("click", function() {
             beginBox.remove();
+            //This is where things are distinguished
+            practice = true;
             if (practice == true) {
                 ex.chromeElements.submitButton.disable();
                 playPracticeGame();
