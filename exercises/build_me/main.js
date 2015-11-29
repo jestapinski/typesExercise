@@ -28,7 +28,7 @@ Still To Do:
 var main = function(ex) {
     
     //temporary variable to figure out what to draw (we can figure out a better way) later
-    var practice = true;
+    var practice = false;
     // ex.data.meta.mode = "practice";
 
     //always quiz-immediate
@@ -152,6 +152,7 @@ var main = function(ex) {
         beginButton.on("click", function() {
             beginBox.remove();
             if (practice == true) {
+                ex.chromeElements.submitButton.disable();
                 playPracticeGame();
             } else {
                 playQuizGame();
@@ -296,23 +297,86 @@ var main = function(ex) {
     dragInfo.mouseup = function(event) {
         for (var i = 0; i < dragInfo.rect.length; i++){
             if (dragInfo.rect[i].drag){
-                //Try to snap into place
-                if (rectsCollide(dragInfo.rect[i], dragInfo.rect[0])){
-                    dragInfo.rect[i].drag = false;
-                    dragInfo.rect[i].left = dragInfo.rect[0].left;
-                    dragInfo.rect[i].top = dragInfo.rect[0].top;
-                    dragInfo.rect[i].right = dragInfo.rect[0].right;
-                    dragInfo.rect[i].bottom = dragInfo.rect[0].bottom;
-                    drawAll();
-                    if (practice == true) {
-                        providePracticeFeedback(dragInfo.value, dragInfo.typeOfElem, dragInfo.rect[i].text, i);
-                    } //else {
-                      //  provideQuizFeedback();
-                      //}
-                }
-                else {
-                    resetBox(dragInfo.rect[i]);
-                    //reset original box location
+                //Try to snap into place 
+                //For practice mode
+                if (practice == true) {
+                    if (rectsCollide(dragInfo.rect[i], dragInfo.rect[0])){
+                        dragInfo.rect[i].drag = false;
+                        dragInfo.rect[i].left = dragInfo.rect[0].left;
+                        dragInfo.rect[i].top = dragInfo.rect[0].top;
+                        dragInfo.rect[i].right = dragInfo.rect[0].right;
+                        dragInfo.rect[i].bottom = dragInfo.rect[0].bottom;
+                        drawAll();
+                        if (practice == true) {
+                            providePracticeFeedback(dragInfo.value, dragInfo.typeOfElem, dragInfo.rect[i].text, i);
+                        } 
+                    }
+                    else {
+                        resetBox(dragInfo.rect[i]);
+                        //reset original box location
+                    }
+                //in quiz mode (putting the options into their types)
+                } else {
+                    //Try to snap into place for the 8 placement boxes
+                    if (rectsCollide(dragInfo.rect[i], dragInfo.rect[0])){
+                        dragInfo.rect[i].drag = false;
+                        dragInfo.rect[i].left = dragInfo.rect[0].left;
+                        dragInfo.rect[i].top = dragInfo.rect[0].top;
+                        dragInfo.rect[i].right = dragInfo.rect[0].right;
+                        dragInfo.rect[i].bottom = dragInfo.rect[0].bottom;
+                        drawAll();
+                    } else if (rectsCollide(dragInfo.rect[i], dragInfo.rect[1])){
+                        dragInfo.rect[i].drag = false;
+                        dragInfo.rect[i].left = dragInfo.rect[1].left;
+                        dragInfo.rect[i].top = dragInfo.rect[1].top;
+                        dragInfo.rect[i].right = dragInfo.rect[1].right;
+                        dragInfo.rect[i].bottom = dragInfo.rect[1].bottom;
+                        drawAll();
+                    } else if (rectsCollide(dragInfo.rect[i], dragInfo.rect[2])){
+                        dragInfo.rect[i].drag = false;
+                        dragInfo.rect[i].left = dragInfo.rect[2].left;
+                        dragInfo.rect[i].top = dragInfo.rect[2].top;
+                        dragInfo.rect[i].right = dragInfo.rect[2].right;
+                        dragInfo.rect[i].bottom = dragInfo.rect[2].bottom;
+                        drawAll();
+                    } else if (rectsCollide(dragInfo.rect[i], dragInfo.rect[3])){
+                        dragInfo.rect[i].drag = false;
+                        dragInfo.rect[i].left = dragInfo.rect[3].left;
+                        dragInfo.rect[i].top = dragInfo.rect[3].top;
+                        dragInfo.rect[i].right = dragInfo.rect[3].right;
+                        dragInfo.rect[i].bottom = dragInfo.rect[3].bottom;
+                        drawAll();
+                    } else if (rectsCollide(dragInfo.rect[i], dragInfo.rect[4])){
+                        dragInfo.rect[i].drag = false;
+                        dragInfo.rect[i].left = dragInfo.rect[4].left;
+                        dragInfo.rect[i].top = dragInfo.rect[4].top;
+                        dragInfo.rect[i].right = dragInfo.rect[4].right;
+                        dragInfo.rect[i].bottom = dragInfo.rect[4].bottom;
+                        drawAll();
+                    } else if (rectsCollide(dragInfo.rect[i], dragInfo.rect[5])){
+                        dragInfo.rect[i].drag = false;
+                        dragInfo.rect[i].left = dragInfo.rect[5].left;
+                        dragInfo.rect[i].top = dragInfo.rect[5].top;
+                        dragInfo.rect[i].right = dragInfo.rect[5].right;
+                        dragInfo.rect[i].bottom = dragInfo.rect[5].bottom;
+                        drawAll();
+                    } else if (rectsCollide(dragInfo.rect[i], dragInfo.rect[6])){
+                        dragInfo.rect[i].drag = false;
+                        dragInfo.rect[i].left = dragInfo.rect[6].left;
+                        dragInfo.rect[i].top = dragInfo.rect[6].top;
+                        dragInfo.rect[i].right = dragInfo.rect[6].right;
+                        dragInfo.rect[i].bottom = dragInfo.rect[6].bottom;
+                        drawAll();
+                    } else if (rectsCollide(dragInfo.rect[i], dragInfo.rect[7])){
+                        dragInfo.rect[i].drag = false;
+                        dragInfo.rect[i].left = dragInfo.rect[7].left;
+                        dragInfo.rect[i].top = dragInfo.rect[7].top;
+                        dragInfo.rect[i].right = dragInfo.rect[7].right;
+                        dragInfo.rect[i].bottom = dragInfo.rect[7].bottom;
+                        drawAll();
+                    } else {
+                        resetBox(dragInfo.rect[i]);
+                    }
                 }
             }
             dragInfo.rect[i].drag = false;
@@ -352,7 +416,7 @@ var main = function(ex) {
         ex.graphics.ctx.clearRect(0,0,ex.width(),ex.height());
         
         //Create graphics as needed
-        var placementRectangle = createRectangleObject(ex.width()/2, ex.height()/2, 100, 75, "#00FFFF", "wow", true);
+        var placementRectangle = createRectangleObject(ex.width()/2.5 + 10, ex.height()/3, 100, 75, "#00FFFF", "wow", true);
         dragInfo.rect.push(placementRectangle);
         placementRectangle.draw();
         var option1 = createRectangleObject(ex.width()/7, 3 * ex.height() / 4, 100, 75, "#33FFAA", "Integer");
@@ -378,25 +442,49 @@ var main = function(ex) {
 
     function playQuizGame() {
 
-        //In dragInfo.rect, first 4 are placement boxes, next 8 are options 
+        //In dragInfo.rect, first 8 are placement boxes, next 8 are options 
 
         dragInfo.rect = [];
-        var placementRectangleInt = createRectangleObject(ex.width()/10, ex.height()/2.5, 100, 100, "#00FFFF", "wow", true);
-        dragInfo.rect.push(placementRectangleInt);
-        placementRectangleInt.draw();
-        var placementRectangleBool = createRectangleObject(placementRectangleInt.left + 1.5* placementRectangleInt.width, 
-                                                           ex.height()/2.5, 100, 100, "#00FFFF", "wow", true);
-        dragInfo.rect.push(placementRectangleBool);
-        placementRectangleBool.draw();
-        var placementRectangleStr = createRectangleObject(placementRectangleBool.left + 1.5* placementRectangleBool.width, 
-                                                          ex.height()/2.5, 100, 100, "#00FFFF", "wow", true);
-        dragInfo.rect.push(placementRectangleStr);
-        placementRectangleStr.draw();
-        var placementRectangleFloat = createRectangleObject(placementRectangleStr.left + 1.5* placementRectangleStr.width, 
-                                                            ex.height()/2.5, 100, 100, "#00FFFF", "wow", true);
-        dragInfo.rect.push(placementRectangleFloat);
-        placementRectangleFloat.draw();
+        dragInfo.value = [];
+        dragInfo.typeOfElem = [];
+        var placementRectangleInt1 = createRectangleObject(ex.width()/10, ex.height()/2.5, 100, 50, "#00FFFF", "wow", true);
+        dragInfo.rect.push(placementRectangleInt1);
+        placementRectangleInt1.draw();
+
+        var placementRectangleInt2 = createRectangleObject(ex.width()/10, ex.height()/2.5 + 60, 100, 50, "#00FFFF", "wow", true);
+        dragInfo.rect.push(placementRectangleInt2);
+        placementRectangleInt2.draw();
+
+        var placementRectangleBool1 = createRectangleObject(placementRectangleInt1.left + 1.5* placementRectangleInt1.width, 
+                                                           ex.height()/2.5, 100, 50, "#00FFFF", "wow", true);
+        dragInfo.rect.push(placementRectangleBool1);
+        placementRectangleBool1.draw();
+
+        var placementRectangleBool2 = createRectangleObject(placementRectangleInt1.left + 1.5* placementRectangleInt1.width, 
+                                                           ex.height()/2.5 + 60, 100, 50, "#00FFFF", "wow", true);
+        dragInfo.rect.push(placementRectangleBool2);
+        placementRectangleBool2.draw();
+
+        var placementRectangleStr1 = createRectangleObject(placementRectangleBool1.left + 1.5* placementRectangleBool1.width, 
+                                                          ex.height()/2.5, 100, 50, "#00FFFF", "wow", true);
+        dragInfo.rect.push(placementRectangleStr1);
+        placementRectangleStr1.draw();
+
+        var placementRectangleStr2 = createRectangleObject(placementRectangleBool1.left + 1.5* placementRectangleBool1.width, 
+                                                          ex.height()/2.5 + 60, 100, 50, "#00FFFF", "wow", true);
+        dragInfo.rect.push(placementRectangleStr2);
+        placementRectangleStr2.draw();
+
+        var placementRectangleFloat1 = createRectangleObject(placementRectangleStr1.left + 1.5* placementRectangleStr1.width, 
+                                                            ex.height()/2.5, 100, 50, "#00FFFF", "wow", true);
+        dragInfo.rect.push(placementRectangleFloat1);
+        placementRectangleFloat1.draw();
         
+        var placementRectangleFloat2 = createRectangleObject(placementRectangleStr1.left + 1.5* placementRectangleStr1.width, 
+                                                            ex.height()/2.5 + 60, 100, 50, "#00FFFF", "wow", true);
+        dragInfo.rect.push(placementRectangleFloat2);
+        placementRectangleFloat2.draw();
+
         //Generate 8 random options, 2 of each type
         options = [0,0,0,0,0,0,0,0];
         optionsTypes = ["","","","","","","",""];
@@ -433,6 +521,9 @@ var main = function(ex) {
                               
             options[index] = actualElement;
             optionsTypes[index] = actualType;
+
+            dragInfo.value[index] = actualElement;
+            dragInfo.typeOfElem[index] = actualType;
            
             //PURPOSE??
             ex.graphics.ctx.clearRect(0,0,ex.width(),ex.height()); 
@@ -442,7 +533,7 @@ var main = function(ex) {
         //Need to append to list rather than overwrite
         console.log(dragInfo.rect);
 
-        var optionY0 = 2.75 * ex.height()/4
+        var optionY0 = 2.75 * ex.height()/4 + 10
         var option1 = createRectangleObject(ex.width()/10, optionY0, 100, 50, "#33FFAA", options[0]);
         dragInfo.rect.push(option1);
         
@@ -455,16 +546,16 @@ var main = function(ex) {
         var option4 = createRectangleObject(option3.left + 1.5* option3.width, optionY0, 100, 50, "#FF7777", options[3]);
         dragInfo.rect.push(option4);
 
-        var option5 = createRectangleObject(ex.width()/10, optionY0 + 75, 100, 50, "#CCFF00", options[4]);
+        var option5 = createRectangleObject(ex.width()/10, optionY0 + 60, 100, 50, "#CCFF00", options[4]);
         dragInfo.rect.push(option5);
         
-        var option6 = createRectangleObject(option5.left + 1.5* option5.width, optionY0 + 75, 100, 50, "#FF9900", options[5]);
+        var option6 = createRectangleObject(option5.left + 1.5* option5.width, optionY0 + 60, 100, 50, "#FF9900", options[5]);
         dragInfo.rect.push(option6);
         
-        var option7 = createRectangleObject(option6.left + 1.5* option6.width, optionY0 + 75, 100, 50, "#9900CC", options[6]);
+        var option7 = createRectangleObject(option6.left + 1.5* option6.width, optionY0 + 60, 100, 50, "#9900CC", options[6]);
         dragInfo.rect.push(option7);
 
-        var option8 = createRectangleObject(option7.left + 1.5* option7.width, optionY0 + 75, 100, 50, "#C00000", options[7]);
+        var option8 = createRectangleObject(option7.left + 1.5* option7.width, optionY0 + 60, 100, 50, "#C00000", options[7]);
         dragInfo.rect.push(option8);
 
         drawAll();
@@ -482,45 +573,55 @@ var main = function(ex) {
                 dragInfo.rect[i].draw();
             };
     
-            //ex.graphics.ctx.fillText(dragInfo.value, ex.width() / 3, ex.height() / 2);
-            //ex.graphics.ctx.fillText("Select the correct type", ex.width() / 10, ex.height() / 10);
+            ex.graphics.ctx.fillText(dragInfo.value, ex.width() / 4, ex.height() / 2 - 50);
+            ex.graphics.ctx.fillText("Select the correct type.", ex.width() / 2, ex.height() / 10);
             //var question = ex.createParagraph(ex.width()/3, ex.height()/2, 
                                               //dragInfo.value, 
                                               //{size: "xlarge", textAlign: "center"});
-            var codeWidth = 160
-            var codeHeight = 70
-            var typeInQuestion = ex.createCode(ex.width()/5, ex.height()/2, dragInfo.value, 
-                                         {size: "large", language: "python"}).innerWidth(codeWidth).innerHeight(codeHeight);
-            var questionStatement = ex.createParagraph(ex.width()/4, ex.height()/5, 
-                                              "Select the correct <code>type</code>.", 
-                                              {size: "xlarge", textAlign: "center"});
+            //var codeWidth = 160
+            //var codeHeight = 70
+            //var typeInQuestion = ex.createCode(ex.width()/5, ex.height()/2, dragInfo.value, 
+            //                             {size: "large", language: "python"}).innerWidth(codeWidth).innerHeight(codeHeight);
+            //var questionStatement = ex.createParagraph(ex.width()/4, ex.height()/5, 
+            //                                  "Select the correct <code>type</code>.", 
+            //                                  {size: "xlarge", textAlign: "center"});
         } else {
             console.log("in Quiz Mode");
-            var questionStatement = ex.createParagraph(ex.width()/4, ex.height()/10,
-                                                       "Drag each rectangle into their <code>type</code>.",
-                                                       {size: "xlarge", textAlign: "center"});
-            var firstTypeX0 = ex.width()/7;
-            var secondTypeX0 = firstTypeX0 + ex.width()/5;
-            var thirdTypeX0 = secondTypeX0 + ex.width()/5;
-            var fourthTypeX0 = thirdTypeX0 + ex.width()/5;
-            var typeY0 = ex.height()/3;
-            var intType = ex.createParagraph(firstTypeX0, typeY0,
-                                             "int", {size: "large"});
-            var boolType = ex.createParagraph(secondTypeX0, typeY0,
-                                              "bool", {size: "large"});
-            var strType = ex.createParagraph(thirdTypeX0, typeY0, 
-                                             "str", {size: "large"});
-            var floatType = ex.createParagraph(fourthTypeX0, typeY0,
-                                               "float", {size: "large"});
-
+            //var questionStatement = ex.createParagraph(ex.width()/4, ex.height()/10,
+            //                                           "Drag each rectangle into their <code>type</code>.",
+            //                                           {size: "xlarge", textAlign: "center"});
             ex.graphics.ctx.fillStyle = "black";
             ex.graphics.ctx.font = "17px Arial Bold";
             ex.graphics.ctx.textAlign = "center";
             ex.graphics.ctx.clearRect(0,0,ex.width(),ex.height());
+
+            ex.graphics.ctx.fillText("Drag each rectangle into their type box.", ex.width() / 2, ex.height() / 8);
+            var firstTypeX0 = ex.width()/7;
+            var secondTypeX0 = firstTypeX0 + ex.width()/4.5;
+            var thirdTypeX0 = secondTypeX0 + ex.width()/4.5;
+            var fourthTypeX0 = thirdTypeX0 + ex.width()/4.5;
+            var typeY0 = ex.height()/3;
+
+            ex.graphics.ctx.fillText("int", firstTypeX0, typeY0);
+            ex.graphics.ctx.fillText("bool", secondTypeX0, typeY0);
+            ex.graphics.ctx.fillText("str", thirdTypeX0, typeY0);
+            ex.graphics.ctx.fillText("float", fourthTypeX0, typeY0);
+
+            //var intType = ex.createParagraph(firstTypeX0, typeY0,
+            //                                 "int", {size: "large"});
+            //var boolType = ex.createParagraph(secondTypeX0, typeY0,
+            //                                  "bool", {size: "large"});
+            //var strType = ex.createParagraph(thirdTypeX0, typeY0, 
+            //                                 "str", {size: "large"});
+            //var floatType = ex.createParagraph(fourthTypeX0, typeY0,
+            //                                   "float", {size: "large"});
+
             for (var i = 0; i < dragInfo.rect.length; i++){
                 dragInfo.rect[i].draw();
-                console.log(options[i]);
-                console.log(optionsTypes[i]);
+                //console.log(options[i]);
+                //console.log(optionsTypes[i]);
+                console.log(dragInfo.value[i]);
+                console.log(dragInfo.typeOfElem[i]);
             };
 
         }
@@ -646,10 +747,54 @@ var main = function(ex) {
         }
     }
 
-    function provideQuizFeedback(){
-        return;
+    function provideQuizFeedback() {
+        var intCorrect = 0;
+        var boolCorrect = 0;
+        var strCorrect = 0;
+        var floatCorrect = 0;
+        var total = 0;
+        //8 answers to check and these rectangles are indexed 8-16
+        for (var i = 8; i < 16; i++) {    
+            console.log(dragInfo.rect[i].left);
+            console.log(dragInfo.rect[0].left);
+            console.log(dragInfo.typeOfElem);
+            console.log(dragInfo.value);
+            console.log(dragInfo.typeOfElem[i]);
+            //check if they've attempted all answers (if not, all the boxes are located on the bottom)
+            if (dragInfo.rect[i].bottom == 337.0625 || 
+                dragInfo.rect[i].bottom == 337.0625 + 60) {
+                ex.alert("Keep trying!", {color: "red"});
+                ex.chromeElements.submitButton.enable();
+                return;
+            }
+            if (dragInfo.rect[i].left == dragInfo.rect[0].left) {
+                //i-8 because the list containing the values is indexed 0-8
+                if (dragInfo.typeOfElem[i-8] == "Integer") { 
+                    intCorrect++;
+                }
+            } if (dragInfo.rect[i].left == dragInfo.rect[2].left) {
+                if (dragInfo.typeOfElem[i-8] == "Boolean") {
+                    boolCorrect++;
+                }
+            } else if (dragInfo.rect[i].left == dragInfo.rect[4].left) {
+                if (dragInfo.typeOfElem[i-8] == "String") {
+                    strCorrect++;
+                }
+            } else if (dragInfo.rect[i].left == dragInfo.rect[6].left) {
+                if (dragInfo.typeOfElem[i-8] == "Float") {
+                    floatCorrect++;
+                }
+            }
+        }
+        total = intCorrect + boolCorrect + strCorrect + floatCorrect;
+        ex.showFeedback(total.toString().concat("/8"));
     }
 
+    //Quiz feedback (using submit button) (putting types into correct buckets)
+    ex.chromeElements.submitButton.on("click", function() {
+        provideQuizFeedback();
+    });
+  
     function runQuizDelayMode(){
         alert("Quizzing on a Delay");
         playGuideBox();
