@@ -726,90 +726,185 @@ var main = function(ex) {
         }
         else {
             //Add in feedback for wrong answers
-            if (expectedResult == "String" && expectedResult.slice(0,3) == "chr"){
-                //we know it is a misunderstanding of what chr is
-                var str = "What type does \'chr(integer)\' return? <span>BUTTON</span>"
-                var chrButton = ex.createButton(0, 0, "OK");
-                chrButton.on("click", function(){
-                    chrBox.remove();
-                    resetBox(dragInfo.rect[i]);
-                })
-                var chrBox = textbox112(str, {
-                    color: 'red'
-                }, undefined, undefined, ex.height()/2 + margin)
-                insertButtonTextbox112(chrBox, chrButton, 'BUTTON');
-            }
-            else if (expectedResult == "Integer" && expectedResult.slice(0,3) == "ord"){
-                //Misunderstanding of what ord is
-                var str = "What type does \'ord(string)\' return? <span>BUTTON</span>"
-                var ordButton = ex.createButton(0, 0, "OK");
-                ordButton.on("click", function(){
-                    ordBox.remove();
-                    resetBox(dragInfo.rect[i]);
-                })
-                var ordBox = textbox112(str, {
-                    color: 'red'
-                }, undefined, undefined, ex.height()/2 + margin);
-                insertButtonTextbox112(ordBox, ordButton, 'BUTTON');
-            }
-            else if (expectedResult == "String"){
-                //Misunderstanding of what makes a string a string
-                //Check for other types but in string form i.e True
-                var str = "Incorrect. What do the \" \" mean? <span>BUTTON</span>"
-                var strButton = ex.createButton(0, 0, "OK");
-                strButton.on("click", function(){
-                    strBox.remove();
-                    resetBox(dragInfo.rect[i]);
-                })
-                var strBox = textbox112(str, {
-                    color: 'red'
-                }, undefined, undefined, ex.height()/2 + margin);
-                insertButtonTextbox112(strBox, strButton, 'BUTTON');
-            }
-            else if (expectedResult == "Integer"){
-                //Misunderstanding of what makes an int an int
-                var str = "Incorrect. Is this a whole number? <span>BUTTON</span>"
-                var intButton = ex.createButton(0, 0, "OK");
-                intButton.on("click", function(){
-                    intBox.remove();
-                    resetBox(dragInfo.rect[i]);
-                })
-                var intBox = textbox112(str, {
-                    color: 'red'
-                }, undefined, undefined, ex.height()/2 + margin);
-                insertButtonTextbox112(intBox, intButton, 'BUTTON');
-            }
-            else if (expectedResult == "Float"){
-                //Misunderstanding of what makes an int an int
-                var str = "Incorrect. Is this a floating point number? <span>BUTTON</span>"
-                var floatButton = ex.createButton(0, 0, "OK");
-                floatButton.on("click", function(){
-                    floatBox.remove();
-                    resetBox(dragInfo.rect[i]);
-                })
-                var floatBox = textbox112(str, {
-                    color: 'red'
-                }, undefined, undefined, ex.height()/2 + margin);
-                insertButtonTextbox112(floatBox, floatButton, 'BUTTON');
-            }
-            else if (expectedResult == "Boolean"){
-                //Misunderstanding of what makes a bool a bool
-                var str = "Incorrect. Is this a True or False quantity? <span>BUTTON</span>"
-                var boolButton = ex.createButton(0, 0, "OK");
-                boolButton.on("click", function(){
-                    boolBox.remove();
-                    resetBox(dragInfo.rect[i]);
-                })
-                var boolBox = textbox112(str, {
-                    color: 'red'
-                }, undefined, undefined, ex.height()/2 + margin);
-                insertButtonTextbox112(boolBox, boolButton, 'BUTTON');
-            }
-            saveData();
-            // ex.graphics.ctx.clearRect(0,0,ex.width(),ex.height());
-            drawAll();
-            return;
+            if (ex.data.meta.mode == "practice"){
+                if (expectedResult == "String" && expectedResult.slice(0,3) == "chr"){
+                    //we know it is a misunderstanding of what chr is
+                    var str = "What type does \'chr(integer)\' return? <span>BUTTON</span>"
+                    var chrButton = ex.createButton(0, 0, "OK");
+                    chrButton.on("click", function(){
+                        chrBox.remove();
+                        resetBox(dragInfo.rect[i]);
+                    })
+                    var chrBox = textbox112(str, {
+                        color: 'red'
+                    }, undefined, undefined, ex.height()/2 + margin)
+                    insertButtonTextbox112(chrBox, chrButton, 'BUTTON');
+                }
+                else if (expectedResult == "Integer" && expectedResult.slice(0,3) == "ord"){
+                    //Misunderstanding of what ord is
+                    var str = "What type does \'ord(string)\' return? <span>BUTTON</span>"
+                    var ordButton = ex.createButton(0, 0, "OK");
+                    ordButton.on("click", function(){
+                        ordBox.remove();
+                        resetBox(dragInfo.rect[i]);
+                    })
+                    var ordBox = textbox112(str, {
+                        color: 'red'
+                    }, undefined, undefined, ex.height()/2 + margin);
+                    insertButtonTextbox112(ordBox, ordButton, 'BUTTON');
+                }
+                else if (expectedResult == "String"){
+                    //Misunderstanding of what makes a string a string
+                    //Check for other types but in string form i.e True
+                    var str = "Incorrect. What do the \" \" mean? <span>BUTTON</span>"
+                    var strButton = ex.createButton(0, 0, "OK");
+                    strButton.on("click", function(){
+                        strBox.remove();
+                        resetBox(dragInfo.rect[i]);
+                    })
+                    var strBox = textbox112(str, {
+                        color: 'red'
+                    }, undefined, undefined, ex.height()/2 + margin);
+                    insertButtonTextbox112(strBox, strButton, 'BUTTON');
+                }
+                else if (expectedResult == "Integer"){
+                    //Misunderstanding of what makes an int an int
+                    var str = "Incorrect. Is this a whole number? <span>BUTTON</span>"
+                    var intButton = ex.createButton(0, 0, "OK");
+                    intButton.on("click", function(){
+                        intBox.remove();
+                        resetBox(dragInfo.rect[i]);
+                    })
+                    var intBox = textbox112(str, {
+                        color: 'red'
+                    }, undefined, undefined, ex.height()/2 + margin);
+                    insertButtonTextbox112(intBox, intButton, 'BUTTON');
+                }
+                else if (expectedResult == "Float"){
+                    //Misunderstanding of what makes an int an int
+                    var str = "Incorrect. Is this a floating point number? <span>BUTTON</span>"
+                    var floatButton = ex.createButton(0, 0, "OK");
+                    floatButton.on("click", function(){
+                        floatBox.remove();
+                        resetBox(dragInfo.rect[i]);
+                    })
+                    var floatBox = textbox112(str, {
+                        color: 'red'
+                    }, undefined, undefined, ex.height()/2 + margin);
+                    insertButtonTextbox112(floatBox, floatButton, 'BUTTON');
+                }
+                else if (expectedResult == "Boolean"){
+                    //Misunderstanding of what makes a bool a bool
+                    var str = "Incorrect. Is this a True or False quantity? <span>BUTTON</span>"
+                    var boolButton = ex.createButton(0, 0, "OK");
+                    boolButton.on("click", function(){
+                        boolBox.remove();
+                        resetBox(dragInfo.rect[i]);
+                    })
+                    var boolBox = textbox112(str, {
+                        color: 'red'
+                    }, undefined, undefined, ex.height()/2 + margin);
+                    insertButtonTextbox112(boolBox, boolButton, 'BUTTON');
+                }
+                saveData();
+                // ex.graphics.ctx.clearRect(0,0,ex.width(),ex.height());
+                drawAll();
+                return;
         }
+        else{
+            // userQuestionNumber++;
+            if (expectedResult == "String" && expectedResult.slice(0,3) == "chr"){
+                    //we know it is a misunderstanding of what chr is
+                    var str = "What type does \'chr(integer)\' return? <span>BUTTON</span>"
+                    var chrButton = ex.createButton(0, 0, "OK");
+                    chrButton.on("click", function(){
+                        chrBox.remove();
+                        resetBox(dragInfo.rect[i]);
+                        playPracticeGame();
+                    })
+                    var chrBox = textbox112(str, {
+                        color: 'red'
+                    }, undefined, undefined, ex.height()/2 + margin)
+                    insertButtonTextbox112(chrBox, chrButton, 'BUTTON');
+                }
+                else if (expectedResult == "Integer" && expectedResult.slice(0,3) == "ord"){
+                    //Misunderstanding of what ord is
+                    var str = "What type does \'ord(string)\' return? <span>BUTTON</span>"
+                    var ordButton = ex.createButton(0, 0, "OK");
+                    ordButton.on("click", function(){
+                        ordBox.remove();
+                        resetBox(dragInfo.rect[i]);
+                        playPracticeGame();
+                    })
+                    var ordBox = textbox112(str, {
+                        color: 'red'
+                    }, undefined, undefined, ex.height()/2 + margin);
+                    insertButtonTextbox112(ordBox, ordButton, 'BUTTON');
+                }
+                else if (expectedResult == "String"){
+                    //Misunderstanding of what makes a string a string
+                    //Check for other types but in string form i.e True
+                    var str = "Incorrect. What do the \" \" mean? <span>BUTTON</span>"
+                    var strButton = ex.createButton(0, 0, "OK");
+                    strButton.on("click", function(){
+                        strBox.remove();
+                        resetBox(dragInfo.rect[i]);
+                        playPracticeGame();
+                    })
+                    var strBox = textbox112(str, {
+                        color: 'red'
+                    }, undefined, undefined, ex.height()/2 + margin);
+                    insertButtonTextbox112(strBox, strButton, 'BUTTON');
+                }
+                else if (expectedResult == "Integer"){
+                    //Misunderstanding of what makes an int an int
+                    var str = "Incorrect. Is this a whole number? <span>BUTTON</span>"
+                    var intButton = ex.createButton(0, 0, "OK");
+                    intButton.on("click", function(){
+                        intBox.remove();
+                        resetBox(dragInfo.rect[i]);
+                        playPracticeGame();
+                    })
+                    var intBox = textbox112(str, {
+                        color: 'red'
+                    }, undefined, undefined, ex.height()/2 + margin);
+                    insertButtonTextbox112(intBox, intButton, 'BUTTON');
+                }
+                else if (expectedResult == "Float"){
+                    //Misunderstanding of what makes an int an int
+                    var str = "Incorrect. Is this a floating point number? <span>BUTTON</span>"
+                    var floatButton = ex.createButton(0, 0, "OK");
+                    floatButton.on("click", function(){
+                        floatBox.remove();
+                        resetBox(dragInfo.rect[i]);
+                        playPracticeGame();
+                    })
+                    var floatBox = textbox112(str, {
+                        color: 'red'
+                    }, undefined, undefined, ex.height()/2 + margin);
+                    insertButtonTextbox112(floatBox, floatButton, 'BUTTON');
+                }
+                else if (expectedResult == "Boolean"){
+                    //Misunderstanding of what makes a bool a bool
+                    var str = "Incorrect. Is this a True or False quantity? <span>BUTTON</span>"
+                    var boolButton = ex.createButton(0, 0, "OK");
+                    boolButton.on("click", function(){
+                        boolBox.remove();
+                        resetBox(dragInfo.rect[i]);
+                        playPracticeGame();
+                    })
+                    var boolBox = textbox112(str, {
+                        color: 'red'
+                    }, undefined, undefined, ex.height()/2 + margin);
+                    insertButtonTextbox112(boolBox, boolButton, 'BUTTON');
+                }
+                saveData();
+                // ex.graphics.ctx.clearRect(0,0,ex.width(),ex.height());
+                drawAll();
+                return;
+        }
+
+    }
     }
 
     function provideQuizFeedback() {
