@@ -5,33 +5,99 @@
 
  //Save data needed:
 /*
-    Exercise number
+    Question Number (0-3 --> 1st part, 4 --> 2nd part)
+    
+    **FIRST PART**
     Current Score
     Current Element
     Current Element Type
+    (Draginfo)
+
+    **SECOND PART**
+    Just the dragInfo? If so done! :D
 
 
 
 Still To Do:
 -Overall Cleaner UI
-    -Constantly Redrawing Question Text
+-Move feedback out of the way (Bucket dropping 2nd mode)
+-Check positioning (should be better)
 -Practice Mode
 -Quiz Delay Mode
--Save state
--Quiz Scoring (Kinda done, need to figure out end of quiz to report)
--Fix locations to account for various screen sizes (not sure how good this is right now)
+    -Delay feedback and move on if incorrect
+-Save state and setting grade (Kinda done, need to verify)
+    -Uncomment above two functions when put onto Heroku
+-"Slightly improved" Feedback in "Practice Mode" (i.e. char, boolean logic and such)
+-Boolean logic is no longer taught, maybe change this?
+
+-Get rid of hardcoded ex.data.instance when put on Heroku
 */
 
 
 
 var main = function(ex) {
     
+
     //temporary variable to figure out what to draw (we can figure out a better way) later
-    var practice = false;
+    var practice = true;
+    var userScore = 0;
+    var userAttempts = 0;
+    var userQuestionNumber = 0;
+    var dragInfo = {};
+    dragInfo.rect = [];
+    dragInfo.mouseLastX = 0;
+    dragInfo.mouseLastY = 0;
+    var showAgain = true;
+
+    var listOfStringTypes = ["\'a\'", "\'A\'", "\'hello\'", "chr(97)", "\'0\'", "\'True\'",
+                             "1 and \'hi'\'", "0 or \'and\'", "\'112\' or 112", 
+                             "\'0\' or 0", "0 or \'0\'", "\'112forlyfe\'"];
+    var listOfIntTypes = ["13", "42", "-124", "ord('a')", "0", "-6+7", 
+                          "4 or True", "0 or 0", "0 and 0", "0.0 or 0",
+                          "\'112\' and 112", "1 or False", "\'0\' and 0", "0 and \'0\'"]; //Can dynamically do these and will add later
+    var listOfFloatTypes = ["1.", "42.999999", "0.1", "4.2", "math.pi", "0 or 0.0", 
+                            "1.0 + 3"];
+    var listOfBoolTypes = ["True", "False", "True or False", "0.0 == 0", 
+                           "True or 0", "1 and False"];
+    var listOfAllTypes = [listOfStringTypes, listOfIntTypes, listOfFloatTypes, listOfBoolTypes];
+
+    //Testing purposes
+    ex.data.instance = {state: undefined};
+
+    //Unloading save state
+    if (ex.data.instance.state != undefined){
+        //There is some kind of save state
+        //If user is on first '4' questions, it is first mode
+        if (ex.data.instance.state.userQuestionNumber != undefined){
+            userQuestionNumber = ex.data.instance.state.userQuestionNumber;
+            if (userQuestionNumber < 4){
+                //In first mode
+                practice = true;
+                dragInfo = ex.data.instance.state.dragInfo;
+                userScore = ex.data.instance.state.userScore;
+                playPracticeGame();
+            }
+            else{
+                //Other mode
+                practice = false;
+                playQuizGame();
+            }
+        }
+    }
     // ex.data.meta.mode = "practice";
 
     //always quiz-immediate
     console.log(ex.data.meta.mode);
+
+    function saveData(){
+        var data = {};
+        data.userQuestionNumber = userQuestionNumber;
+        data.dragInfo = dragInfo;
+        data.userScore = userScore;
+        //if (ex.data.meta.mode == "quiz-delay"){
+        // ex.saveState(data);
+        //}
+    }
     
     /**
      * @returns {object} See Piazza post 
@@ -83,22 +149,9 @@ var main = function(ex) {
             ex.insertDropdown(TextboxElement, identifier, button);
         };
 
-
-    var userScore = 0;
-    var userAttempts = 0;
     //Keep track of score regardless, only care if in quiz-delay or immediate mode
 
-    var listOfStringTypes = ["\'a\'", "\'A\'", "\'hello\'", "chr(97)", "\'0\'", "\'True\'",
-                             "1 and \'hi'\'", "0 or \'and\'", "\'112\' or 112", 
-                             "\'0\' or 0", "0 or \'0\'", "\'112forlyfe\'"];
-    var listOfIntTypes = ["13", "42", "-124", "ord('a')", "0", "-6+7", 
-                          "4 or True", "0 or 0", "0 and 0", "0.0 or 0",
-                          "\'112\' and 112", "1 or False", "\'0\' and 0", "0 and \'0\'"]; //Can dynamically do these and will add later
-    var listOfFloatTypes = ["1.", "42.999999", "0.1", "4.2", "math.pi", "0 or 0.0", 
-                            "1.0 + 3"];
-    var listOfBoolTypes = ["True", "False", "True or False", "0.0 == 0", 
-                           "True or 0", "1 and False"];
-    var listOfAllTypes = [listOfStringTypes, listOfIntTypes, listOfFloatTypes, listOfBoolTypes];
+
 
 
 
@@ -151,9 +204,8 @@ var main = function(ex) {
         beginButton.on("click", function() {
             beginBox.remove();
             //This is where things are distinguished
-            practice = true;
             if (practice == true) {
-                ex.chromeElements.submitButton.disable();
+                // ex.chromeElements.submitButton.disable();
                 playPracticeGame();
             } else {
                 playQuizGame();
@@ -235,11 +287,6 @@ var main = function(ex) {
         };
         return rectangle;
     }
-
-    var dragInfo = {};
-    dragInfo.rect = [];
-    dragInfo.mouseLastX = 0;
-    dragInfo.mouseLastY = 0;
 
     dragInfo.mousedown = function(event) {
         var x = event.offsetX;
@@ -393,6 +440,11 @@ var main = function(ex) {
         dragInfo.rect = [];
         dragInfo.value = undefined;
         dragInfo.typeOfElem = undefined;
+        if (userQuestionNumber > 3){
+            practice = false;
+            playQuizGame();
+            return;
+        }
         //Randomly Generate an element and type
         var elementType = randomIndex(0, listOfAllTypes.length - 1);
         var actualType;
@@ -417,33 +469,38 @@ var main = function(ex) {
         ex.graphics.ctx.clearRect(0,0,ex.width(),ex.height());
         
         //Create graphics as needed
-        var placementRectangle = createRectangleObject(ex.width()/2.5 + 10, ex.height()/3, 100, 75, "#00FFFF", "wow", true);
+        // var width = ex.width()/2;
+        var width = 100;
+        var margin = 25;
+        var placementRectangle = createRectangleObject(ex.width()/2 + 75, ex.height()/3, width, 75, "#00FFFF", "wow", true);
         dragInfo.rect.push(placementRectangle);
         placementRectangle.draw();
-        var option1 = createRectangleObject(ex.width()/7, 3 * ex.height() / 4, 100, 75, "#33FFAA", "Integer");
+        var option1 = createRectangleObject(ex.width()/2 - 2* margin - 2* width, 3 * ex.height() / 4, width, 75, "#33FFAA", "Integer");
         // option1.draw();
         //Need to append to list rather than overwrite
         console.log(dragInfo.rect);
         dragInfo.rect.push(option1);
-        var option2 = createRectangleObject(option1.left + 1.5* option1.width, 3 * ex.height()/4, 100, 75, "#AAAAAA", "String");
+        var option2 = createRectangleObject(option1.left + margin + width, 3 * ex.height()/4, width, 75, "#AAAAAA", "String");
         dragInfo.rect.push(option2);
         // option2.draw();
         //Drag and drop
-        var option3 = createRectangleObject(option2.left + 1.5* option2.width, 3 * ex.height()/4, 100, 75, "#7777FF", "Float");
+        var option3 = createRectangleObject(option2.left + margin + width, 3 * ex.height()/4, width, 75, "#7777FF", "Float");
         dragInfo.rect.push(option3);
         // option3.draw();
 
-        var option4 = createRectangleObject(option3.left + 1.5* option3.width, 3 * ex.height()/4, 100, 75, "#FF7777", "Boolean");
+        var option4 = createRectangleObject(option3.left + margin + width, 3 * ex.height()/4, width, 75, "#FF7777", "Boolean");
         dragInfo.rect.push(option4);
         // option4.draw();
-
+        saveData();
         drawAll();
         return;
 }
 
     function playQuizGame() {
 
-        //In dragInfo.rect, first 8 are placement boxes, next 8 are options 
+        //In dragInfo.rect, first 8 are placement boxes, next 8 are options
+
+        ex.chromeElements.submitButton.enable(); 
 
         dragInfo.rect = [];
         dragInfo.value = [];
@@ -456,32 +513,32 @@ var main = function(ex) {
         dragInfo.rect.push(placementRectangleInt2);
         placementRectangleInt2.draw();
 
-        var placementRectangleBool1 = createRectangleObject(placementRectangleInt1.left + 1.5* placementRectangleInt1.width, 
+        var placementRectangleBool1 = createRectangleObject(placementRectangleInt1.left + ex.width()/4.5, 
                                                            ex.height()/2.5, 100, 50, "#00FFFF", "wow", true);
         dragInfo.rect.push(placementRectangleBool1);
         placementRectangleBool1.draw();
 
-        var placementRectangleBool2 = createRectangleObject(placementRectangleInt1.left + 1.5* placementRectangleInt1.width, 
+        var placementRectangleBool2 = createRectangleObject(placementRectangleInt1.left + ex.width()/4.5, 
                                                            ex.height()/2.5 + 60, 100, 50, "#00FFFF", "wow", true);
         dragInfo.rect.push(placementRectangleBool2);
         placementRectangleBool2.draw();
 
-        var placementRectangleStr1 = createRectangleObject(placementRectangleBool1.left + 1.5* placementRectangleBool1.width, 
+        var placementRectangleStr1 = createRectangleObject(placementRectangleBool1.left + ex.width()/4.5, 
                                                           ex.height()/2.5, 100, 50, "#00FFFF", "wow", true);
         dragInfo.rect.push(placementRectangleStr1);
         placementRectangleStr1.draw();
 
-        var placementRectangleStr2 = createRectangleObject(placementRectangleBool1.left + 1.5* placementRectangleBool1.width, 
+        var placementRectangleStr2 = createRectangleObject(placementRectangleBool1.left + ex.width()/4.5, 
                                                           ex.height()/2.5 + 60, 100, 50, "#00FFFF", "wow", true);
         dragInfo.rect.push(placementRectangleStr2);
         placementRectangleStr2.draw();
 
-        var placementRectangleFloat1 = createRectangleObject(placementRectangleStr1.left + 1.5* placementRectangleStr1.width, 
+        var placementRectangleFloat1 = createRectangleObject(placementRectangleStr1.left + ex.width()/4.5, 
                                                             ex.height()/2.5, 100, 50, "#00FFFF", "wow", true);
         dragInfo.rect.push(placementRectangleFloat1);
         placementRectangleFloat1.draw();
         
-        var placementRectangleFloat2 = createRectangleObject(placementRectangleStr1.left + 1.5* placementRectangleStr1.width, 
+        var placementRectangleFloat2 = createRectangleObject(placementRectangleStr1.left + ex.width()/4.5, 
                                                             ex.height()/2.5 + 60, 100, 50, "#00FFFF", "wow", true);
         dragInfo.rect.push(placementRectangleFloat2);
         placementRectangleFloat2.draw();
@@ -538,27 +595,28 @@ var main = function(ex) {
         var option1 = createRectangleObject(ex.width()/10, optionY0, 100, 50, "#33FFAA", options[0]);
         dragInfo.rect.push(option1);
         
-        var option2 = createRectangleObject(option1.left + 1.5* option1.width, optionY0, 100, 50, "#AAAAAA", options[1]);
+        var option2 = createRectangleObject(option1.left + ex.width()/4.5, optionY0, 100, 50, "#AAAAAA", options[1]);
         dragInfo.rect.push(option2);
 
-        var option3 = createRectangleObject(option2.left + 1.5* option2.width, optionY0, 100, 50, "#7777FF", options[2]);
+        var option3 = createRectangleObject(option2.left + ex.width()/4.5, optionY0, 100, 50, "#7777FF", options[2]);
         dragInfo.rect.push(option3);
 
-        var option4 = createRectangleObject(option3.left + 1.5* option3.width, optionY0, 100, 50, "#FF7777", options[3]);
+        var option4 = createRectangleObject(option3.left + ex.width()/4.5, optionY0, 100, 50, "#FF7777", options[3]);
         dragInfo.rect.push(option4);
 
         var option5 = createRectangleObject(ex.width()/10, optionY0 + 60, 100, 50, "#CCFF00", options[4]);
         dragInfo.rect.push(option5);
         
-        var option6 = createRectangleObject(option5.left + 1.5* option5.width, optionY0 + 60, 100, 50, "#FF9900", options[5]);
+        var option6 = createRectangleObject(option5.left + ex.width()/4.5, optionY0 + 60, 100, 50, "#FF9900", options[5]);
         dragInfo.rect.push(option6);
         
-        var option7 = createRectangleObject(option6.left + 1.5* option6.width, optionY0 + 60, 100, 50, "#9900CC", options[6]);
+        var option7 = createRectangleObject(option6.left + ex.width()/4.5, optionY0 + 60, 100, 50, "#9900CC", options[6]);
         dragInfo.rect.push(option7);
 
-        var option8 = createRectangleObject(option7.left + 1.5* option7.width, optionY0 + 60, 100, 50, "#C00000", options[7]);
+        var option8 = createRectangleObject(option7.left + ex.width()/4.5, optionY0 + 60, 100, 50, "#C00000", options[7]);
         dragInfo.rect.push(option8);
 
+        saveData();
         drawAll();
         return;
 }
@@ -574,8 +632,9 @@ var main = function(ex) {
                 dragInfo.rect[i].draw();
             };
     
-            ex.graphics.ctx.fillText(dragInfo.value, ex.width() / 4, ex.height() / 2 - 50);
             ex.graphics.ctx.fillText("Select the correct type.", ex.width() / 2, ex.height() / 10);
+            ex.graphics.ctx.textAlign = "right";
+            ex.graphics.ctx.fillText(dragInfo.value, ex.width() / 2 - 50, ex.height() / 2 - 75);
             //var question = ex.createParagraph(ex.width()/3, ex.height()/2, 
                                               //dragInfo.value, 
                                               //{size: "xlarge", textAlign: "center"});
@@ -628,15 +687,18 @@ var main = function(ex) {
         }
     }
 
-    var showAgain = true;
+//options, width, left, top, cx, cy,
 
     function providePracticeFeedback(value, expectedResult, actualResult, i) {
         console.log("here");
         console.log(userAttempts);
         console.log(userScore);
-        userAttempts++;
+        userQuestionNumber++;
+        saveData();
+        var margin = 20;
         if (expectedResult == actualResult) {
             userScore++;
+            saveData();
             if (showAgain){
                 var hideButton = ex.createButton(0, 0, "Hide Correct Feedback");
                 hideButton.on("click", function() {
@@ -651,11 +713,12 @@ var main = function(ex) {
                     ex.graphics.ctx.clearRect(0,0,ex.width(),ex.height());
                     playPracticeGame();
                 })
-                var correctBox = textbox112("Correct! <span>BTN1</span> <span>BTN2</span>");
+                var correctBox = textbox112("Correct! <span>BTN1</span> <span>BTN2</span>", {}, undefined, undefined, ex.height()/2 + margin);
                 insertButtonTextbox112(correctBox, hideButton, "BTN1");
                 insertButtonTextbox112(correctBox, nahButton, "BTN2");
             }
             else{
+                saveData();
                 ex.graphics.ctx.clearRect(0,0,ex.width(),ex.height());
                 playPracticeGame(); 
             }
@@ -673,7 +736,7 @@ var main = function(ex) {
                 })
                 var chrBox = textbox112(str, {
                     color: 'red'
-                })
+                }, undefined, undefined, ex.height()/2 + margin)
                 insertButtonTextbox112(chrBox, chrButton, 'BUTTON');
             }
             else if (expectedResult == "Integer" && expectedResult.slice(0,3) == "ord"){
@@ -686,7 +749,7 @@ var main = function(ex) {
                 })
                 var ordBox = textbox112(str, {
                     color: 'red'
-                })
+                }, undefined, undefined, ex.height()/2 + margin);
                 insertButtonTextbox112(ordBox, ordButton, 'BUTTON');
             }
             else if (expectedResult == "String"){
@@ -700,7 +763,7 @@ var main = function(ex) {
                 })
                 var strBox = textbox112(str, {
                     color: 'red'
-                })
+                }, undefined, undefined, ex.height()/2 + margin);
                 insertButtonTextbox112(strBox, strButton, 'BUTTON');
             }
             else if (expectedResult == "Integer"){
@@ -713,7 +776,7 @@ var main = function(ex) {
                 })
                 var intBox = textbox112(str, {
                     color: 'red'
-                })
+                }, undefined, undefined, ex.height()/2 + margin);
                 insertButtonTextbox112(intBox, intButton, 'BUTTON');
             }
             else if (expectedResult == "Float"){
@@ -726,7 +789,7 @@ var main = function(ex) {
                 })
                 var floatBox = textbox112(str, {
                     color: 'red'
-                })
+                }, undefined, undefined, ex.height()/2 + margin);
                 insertButtonTextbox112(floatBox, floatButton, 'BUTTON');
             }
             else if (expectedResult == "Boolean"){
@@ -739,9 +802,10 @@ var main = function(ex) {
                 })
                 var boolBox = textbox112(str, {
                     color: 'red'
-                })
+                }, undefined, undefined, ex.height()/2 + margin);
                 insertButtonTextbox112(boolBox, boolButton, 'BUTTON');
             }
+            saveData();
             // ex.graphics.ctx.clearRect(0,0,ex.width(),ex.height());
             drawAll();
             return;
@@ -749,6 +813,9 @@ var main = function(ex) {
     }
 
     function provideQuizFeedback() {
+        if (practice == true){
+            ex.chromeElements.submitButton.enable();
+            return;}
         var intCorrect = 0;
         var boolCorrect = 0;
         var strCorrect = 0;
@@ -807,8 +874,14 @@ var main = function(ex) {
                 }
             }
         }
-        total = intCorrect + boolCorrect + strCorrect + floatCorrect;
-        ex.showFeedback(total.toString().concat("/8"));
+        saveData();
+        total = userScore + intCorrect + boolCorrect + strCorrect + floatCorrect;
+        var totalScore = (10 * total / 12);
+        //Set the grade
+        //if (ex.data.meta.mode == "quiz-delay"){
+        // ex.setGrade(totalScore, "Good job!");
+        //}
+        ex.showFeedback(total.toString().concat("/12"));
     }
 
     //Quiz feedback (using submit button) (putting types into correct buckets)
@@ -824,16 +897,18 @@ var main = function(ex) {
 
 
 //Woo switch cases
-    switch (ex.data.meta.mode){
-        case "practice":
-            runPracticeMode(ex)
-            return;
-        case "quiz-immediate":
-            runQuizImmediateMode(ex)
-            return;
-        case "quiz-delay":
-            runQuizDelayMode(ex)
-            return;
+    if (ex.data.instance.state == undefined){
+        switch (ex.data.meta.mode){
+            case "practice":
+                runPracticeMode(ex)
+                return;
+            case "quiz-immediate":
+                runQuizImmediateMode(ex)
+                return;
+            case "quiz-delay":
+                runQuizDelayMode(ex)
+                return;
+        }
     }
 
 };
