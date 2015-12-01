@@ -437,6 +437,8 @@ var main = function(ex) {
     ex.graphics.on("mousedown",dragInfo.mousedown);
 
     function playPracticeGame(){
+
+        ex.chromeElements.submitButton.disable(); 
         dragInfo.rect = [];
         dragInfo.value = undefined;
         dragInfo.typeOfElem = undefined;
@@ -923,9 +925,9 @@ var main = function(ex) {
             console.log(dragInfo.typeOfElem);
             console.log(dragInfo.value);
             console.log(dragInfo.typeOfElem[i]);
-            //check if they've attempted all answers (if not, all the boxes are located on the bottom)
-            if (dragInfo.rect[i].bottom == 337.0625 || 
-                dragInfo.rect[i].bottom == 337.0625 + 60) {
+            //check if they've attempted all answers (if not, at least one of the boxes are located on the bottom)
+            if (dragInfo.rect[i].bottom == 337.75 || 
+                dragInfo.rect[i].bottom == 337.75 + 60) {
                 ex.alert("Keep trying!", {color: "red"});
                 ex.chromeElements.submitButton.enable();
                 return;
@@ -977,6 +979,11 @@ var main = function(ex) {
         // ex.setGrade(totalScore, "Good job!");
         //}
         ex.showFeedback(total.toString().concat("/12"));
+        //disable moving things after submitting
+        for (var i = 0; i < dragInfo.rect.length; i++) {
+            dragInfo.rect[i].clicked = false;
+        }
+
     }
 
     //Quiz feedback (using submit button) (putting types into correct buckets)
