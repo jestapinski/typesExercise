@@ -62,62 +62,9 @@ var main = function(ex) {
     var listOfAllTypes = [listOfStringTypes, listOfIntTypes, listOfFloatTypes, listOfBoolTypes];
 
     //Testing purposes
-    ex.data.instance = {state: undefined};
+    // ex.data.instance = {state: undefined};
+    console.log(ex.data.instance.state);
 
-    //Unloading save state
-    if (ex.data.instance.state != undefined){
-        //There is some kind of save state
-        //If user is on first '4' questions, it is first mode
-        if (ex.data.instance.state.userQuestionNumber != undefined){
-            userQuestionNumber = ex.data.instance.state.userQuestionNumber;
-            if (userQuestionNumber < 4){
-                //In first mode
-                practice = true;
-                dragInfo = ex.data.instance.state.dragInfo;
-                userScore = ex.data.instance.state.userScore;
-                playPracticeGame();
-            }
-            else{
-                //Other mode
-                practice = false;
-                playQuizGame();
-            }
-        }
-    }
-    // ex.data.meta.mode = "practice";
-
-    //always quiz-immediate
-    console.log(ex.data.meta.mode);
-
-    function saveData(){
-        var data = {};
-        data.userQuestionNumber = userQuestionNumber;
-        data.dragInfo = dragInfo;
-        data.userScore = userScore;
-        //if (ex.data.meta.mode == "quiz-delay"){
-        // ex.saveState(data);
-        //}
-    }
-    
-    /**
-     * @returns {object} See Piazza post 
-     */
-    var generateContent = function () {
-        var content = {};
-        //populate content
-        return content;
-    };
-
-    /**
-     * @param {object} the result of generateContent()
-     * @param {object} just pass in ex.data
-     * @returns {number} floating point from 0 to 1
-     */
-    var grade = function (content,state) {
-        return 1.0; 
-    };
-
-    //A good place to start is the kitchen sink
 
     textbox112 = function(message, options, width, left, top, cx, cy, height) {
             // Default Arguments!
@@ -149,6 +96,45 @@ var main = function(ex) {
             ex.insertDropdown(TextboxElement, identifier, button);
         };
 
+    //Unloading save state
+
+    // ex.data.meta.mode = "practice";
+
+    //always quiz-immediate
+    console.log(ex.data.meta.mode);
+
+    function saveData(){
+        var data = {};
+        data.userQuestionNumber = userQuestionNumber;
+        data.dragInfo = dragInfo;
+        data.userScore = userScore;
+        if (ex.data.meta.mode == "quiz-delay" || ex.data.meta.mode == "quiz-immediate"){
+        ex.saveState(data);
+        }
+    }
+    
+    /**
+     * @returns {object} See Piazza post 
+     */
+    var generateContent = function () {
+        var content = {};
+        //populate content
+        return content;
+    };
+
+    /**
+     * @param {object} the result of generateContent()
+     * @param {object} just pass in ex.data
+     * @returns {number} floating point from 0 to 1
+     */
+    var grade = function (content,state) {
+        return 1.0; 
+    };
+
+    //A good place to start is the kitchen sink
+
+
+
     //Keep track of score regardless, only care if in quiz-delay or immediate mode
 
 
@@ -171,7 +157,7 @@ var main = function(ex) {
     }
 
     function runQuizImmediateMode(){
-        alert("Quizzing Immediately");
+        // alert("Quizzing Immediately");
         // ex.createParagraph(500, 500, "Hello world");
         // var newButton = ex.createButton(0, 0, "OK");
         // newButton.on("click", function() {
@@ -697,7 +683,7 @@ var main = function(ex) {
         console.log(userScore);
         userQuestionNumber++;
         saveData();
-        var margin = 20;
+        var margin = -40;
         if (expectedResult == actualResult) {
             userScore++;
             saveData();
@@ -715,7 +701,7 @@ var main = function(ex) {
                     ex.graphics.ctx.clearRect(0,0,ex.width(),ex.height());
                     playPracticeGame();
                 })
-                var correctBox = textbox112("Correct! <span>BTN1</span> <span>BTN2</span>", {}, undefined, undefined, ex.height()/2 + margin);
+                var correctBox = textbox112("Correct! <span>BTN1</span> <span>BTN2</span>", {}, undefined, ex.height()/3, ex.height()/2 + margin);
                 insertButtonTextbox112(correctBox, hideButton, "BTN1");
                 insertButtonTextbox112(correctBox, nahButton, "BTN2");
             }
@@ -739,7 +725,7 @@ var main = function(ex) {
                     })
                     var chrBox = textbox112(str, {
                         color: 'red'
-                    }, undefined, undefined, ex.height()/2 + margin)
+                    }, undefined, ex.height()/3, ex.height()/2 + margin)
                     insertButtonTextbox112(chrBox, chrButton, 'BUTTON');
                 }
                 else if (expectedResult == "Integer" && expectedResult.slice(0,3) == "ord"){
@@ -752,7 +738,7 @@ var main = function(ex) {
                     })
                     var ordBox = textbox112(str, {
                         color: 'red'
-                    }, undefined, undefined, ex.height()/2 + margin);
+                    }, undefined, ex.height()/3, ex.height()/2 + margin);
                     insertButtonTextbox112(ordBox, ordButton, 'BUTTON');
                 }
                 else if (expectedResult == "String"){
@@ -766,7 +752,7 @@ var main = function(ex) {
                     })
                     var strBox = textbox112(str, {
                         color: 'red'
-                    }, undefined, undefined, ex.height()/2 + margin);
+                    }, undefined, ex.height()/3, ex.height()/2 + margin);
                     insertButtonTextbox112(strBox, strButton, 'BUTTON');
                 }
                 else if (expectedResult == "Integer"){
@@ -779,7 +765,7 @@ var main = function(ex) {
                     })
                     var intBox = textbox112(str, {
                         color: 'red'
-                    }, undefined, undefined, ex.height()/2 + margin);
+                    }, undefined, ex.height()/3, ex.height()/2 + margin);
                     insertButtonTextbox112(intBox, intButton, 'BUTTON');
                 }
                 else if (expectedResult == "Float"){
@@ -792,7 +778,7 @@ var main = function(ex) {
                     })
                     var floatBox = textbox112(str, {
                         color: 'red'
-                    }, undefined, undefined, ex.height()/2 + margin);
+                    }, undefined, ex.height()/3, ex.height()/2 + margin);
                     insertButtonTextbox112(floatBox, floatButton, 'BUTTON');
                 }
                 else if (expectedResult == "Boolean"){
@@ -805,7 +791,7 @@ var main = function(ex) {
                     })
                     var boolBox = textbox112(str, {
                         color: 'red'
-                    }, undefined, undefined, ex.height()/2 + margin);
+                    }, undefined, ex.height()/3, ex.height()/2 + margin);
                     insertButtonTextbox112(boolBox, boolButton, 'BUTTON');
                 }
                 saveData();
@@ -826,7 +812,7 @@ var main = function(ex) {
                     })
                     var chrBox = textbox112(str, {
                         color: 'red'
-                    }, undefined, undefined, ex.height()/2 + margin)
+                    }, undefined, ex.height()/3, ex.height()/2 + margin)
                     insertButtonTextbox112(chrBox, chrButton, 'BUTTON');
                 }
                 else if (expectedResult == "Integer" && expectedResult.slice(0,3) == "ord"){
@@ -840,7 +826,7 @@ var main = function(ex) {
                     })
                     var ordBox = textbox112(str, {
                         color: 'red'
-                    }, undefined, undefined, ex.height()/2 + margin);
+                    }, undefined, ex.height()/3, ex.height()/2 + margin);
                     insertButtonTextbox112(ordBox, ordButton, 'BUTTON');
                 }
                 else if (expectedResult == "String"){
@@ -855,7 +841,7 @@ var main = function(ex) {
                     })
                     var strBox = textbox112(str, {
                         color: 'red'
-                    }, undefined, undefined, ex.height()/2 + margin);
+                    }, undefined, ex.height()/3, ex.height()/2 + margin);
                     insertButtonTextbox112(strBox, strButton, 'BUTTON');
                 }
                 else if (expectedResult == "Integer"){
@@ -869,7 +855,7 @@ var main = function(ex) {
                     })
                     var intBox = textbox112(str, {
                         color: 'red'
-                    }, undefined, undefined, ex.height()/2 + margin);
+                    }, undefined, ex.height()/3, ex.height()/2 + margin);
                     insertButtonTextbox112(intBox, intButton, 'BUTTON');
                 }
                 else if (expectedResult == "Float"){
@@ -883,7 +869,7 @@ var main = function(ex) {
                     })
                     var floatBox = textbox112(str, {
                         color: 'red'
-                    }, undefined, undefined, ex.height()/2 + margin);
+                    }, undefined, ex.height()/3, ex.height()/2 + margin);
                     insertButtonTextbox112(floatBox, floatButton, 'BUTTON');
                 }
                 else if (expectedResult == "Boolean"){
@@ -897,7 +883,7 @@ var main = function(ex) {
                     })
                     var boolBox = textbox112(str, {
                         color: 'red'
-                    }, undefined, undefined, ex.height()/2 + margin);
+                    }, undefined, ex.height()/3, ex.height()/2 + margin);
                     insertButtonTextbox112(boolBox, boolButton, 'BUTTON');
                 }
                 saveData();
@@ -926,13 +912,15 @@ var main = function(ex) {
             console.log(dragInfo.value);
             console.log(dragInfo.typeOfElem[i]);
             //check if they've attempted all answers (if not, at least one of the boxes are located on the bottom)
-            if (dragInfo.rect[i].bottom == 337.75 || 
-                dragInfo.rect[i].bottom == 337.75 + 60) {
+            console.log(dragInfo.rect[8].bottom);
+            console.log(dragInfo.rect[15].bottom);
+            if (dragInfo.rect[i].bottom == 417.34722375 || 
+                dragInfo.rect[i].bottom == 417.34722375 + 60) {
                 ex.alert("Keep trying!", {color: "red"});
                 ex.chromeElements.submitButton.enable();
                 return;
             }
-            if (dragInfo.rect[i].left == dragInfo.rect[0].left) {
+            else if (dragInfo.rect[i].left == dragInfo.rect[0].left) {
                 //i-8 because the list containing the values is indexed 0-8
                 if (dragInfo.typeOfElem[i-8] == "Integer") { 
                     intCorrect++;
@@ -942,7 +930,7 @@ var main = function(ex) {
                     ex.graphics.ctx.strokeRect(dragInfo.rect[i].left, dragInfo.rect[i].top,
                                                dragInfo.rect[i].width, dragInfo.rect[i].height);
                 }
-            } if (dragInfo.rect[i].left == dragInfo.rect[2].left) {
+            } else if (dragInfo.rect[i].left == dragInfo.rect[2].left) {
                 if (dragInfo.typeOfElem[i-8] == "Boolean") {
                     boolCorrect++;
                 } else {
@@ -992,11 +980,40 @@ var main = function(ex) {
     });
   
     function runQuizDelayMode(){
-        alert("Quizzing on a Delay");
+        // alert("Quizzing on a Delay");
         playGuideBox();
         return;
     }
 
+
+    if (ex.data.instance.state != undefined){
+        //There is some kind of save state
+        //If user is on first '4' questions, it is first mode
+        if (ex.data.instance.state.userQuestionNumber != undefined){
+            userQuestionNumber = ex.data.instance.state.userQuestionNumber;
+            if (userQuestionNumber < 4){
+                //In first mode
+                practice = true;
+                dragInfo = ex.data.instance.state.dragInfo;
+                userScore = ex.data.instance.state.userScore;
+                playPracticeGame();
+            }
+            else{
+                //Other mode
+                practice = false;
+                playQuizGame();
+            }
+        }
+        else{
+            userQuestionNumber = 0;
+            if (ex.data.meta.mode == "quiz-immediate"){
+            runQuizImmediateMode(ex);
+            }
+            else{
+                runQuizDelay(ex);
+            }
+            }
+        }
 
 //Woo switch cases
     if (ex.data.instance.state == undefined){
