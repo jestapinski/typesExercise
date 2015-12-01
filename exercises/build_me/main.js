@@ -697,7 +697,7 @@ var main = function(ex) {
         console.log(userScore);
         userQuestionNumber++;
         saveData();
-        var margin = 20;
+        var margin = -40;
         if (expectedResult == actualResult) {
             userScore++;
             saveData();
@@ -715,7 +715,7 @@ var main = function(ex) {
                     ex.graphics.ctx.clearRect(0,0,ex.width(),ex.height());
                     playPracticeGame();
                 })
-                var correctBox = textbox112("Correct! <span>BTN1</span> <span>BTN2</span>", {}, undefined, undefined, ex.height()/2 + margin);
+                var correctBox = textbox112("Correct! <span>BTN1</span> <span>BTN2</span>", {}, undefined, ex.height()/3, ex.height()/2 + margin);
                 insertButtonTextbox112(correctBox, hideButton, "BTN1");
                 insertButtonTextbox112(correctBox, nahButton, "BTN2");
             }
@@ -739,7 +739,7 @@ var main = function(ex) {
                     })
                     var chrBox = textbox112(str, {
                         color: 'red'
-                    }, undefined, undefined, ex.height()/2 + margin)
+                    }, undefined, ex.height()/3, ex.height()/2 + margin)
                     insertButtonTextbox112(chrBox, chrButton, 'BUTTON');
                 }
                 else if (expectedResult == "Integer" && expectedResult.slice(0,3) == "ord"){
@@ -752,7 +752,7 @@ var main = function(ex) {
                     })
                     var ordBox = textbox112(str, {
                         color: 'red'
-                    }, undefined, undefined, ex.height()/2 + margin);
+                    }, undefined, ex.height()/3, ex.height()/2 + margin);
                     insertButtonTextbox112(ordBox, ordButton, 'BUTTON');
                 }
                 else if (expectedResult == "String"){
@@ -766,7 +766,7 @@ var main = function(ex) {
                     })
                     var strBox = textbox112(str, {
                         color: 'red'
-                    }, undefined, undefined, ex.height()/2 + margin);
+                    }, undefined, ex.height()/3, ex.height()/2 + margin);
                     insertButtonTextbox112(strBox, strButton, 'BUTTON');
                 }
                 else if (expectedResult == "Integer"){
@@ -779,7 +779,7 @@ var main = function(ex) {
                     })
                     var intBox = textbox112(str, {
                         color: 'red'
-                    }, undefined, undefined, ex.height()/2 + margin);
+                    }, undefined, ex.height()/3, ex.height()/2 + margin);
                     insertButtonTextbox112(intBox, intButton, 'BUTTON');
                 }
                 else if (expectedResult == "Float"){
@@ -792,7 +792,7 @@ var main = function(ex) {
                     })
                     var floatBox = textbox112(str, {
                         color: 'red'
-                    }, undefined, undefined, ex.height()/2 + margin);
+                    }, undefined, ex.height()/3, ex.height()/2 + margin);
                     insertButtonTextbox112(floatBox, floatButton, 'BUTTON');
                 }
                 else if (expectedResult == "Boolean"){
@@ -805,7 +805,7 @@ var main = function(ex) {
                     })
                     var boolBox = textbox112(str, {
                         color: 'red'
-                    }, undefined, undefined, ex.height()/2 + margin);
+                    }, undefined, ex.height()/3, ex.height()/2 + margin);
                     insertButtonTextbox112(boolBox, boolButton, 'BUTTON');
                 }
                 saveData();
@@ -826,7 +826,7 @@ var main = function(ex) {
                     })
                     var chrBox = textbox112(str, {
                         color: 'red'
-                    }, undefined, undefined, ex.height()/2 + margin)
+                    }, undefined, ex.height()/3, ex.height()/2 + margin)
                     insertButtonTextbox112(chrBox, chrButton, 'BUTTON');
                 }
                 else if (expectedResult == "Integer" && expectedResult.slice(0,3) == "ord"){
@@ -840,7 +840,7 @@ var main = function(ex) {
                     })
                     var ordBox = textbox112(str, {
                         color: 'red'
-                    }, undefined, undefined, ex.height()/2 + margin);
+                    }, undefined, ex.height()/3, ex.height()/2 + margin);
                     insertButtonTextbox112(ordBox, ordButton, 'BUTTON');
                 }
                 else if (expectedResult == "String"){
@@ -855,7 +855,7 @@ var main = function(ex) {
                     })
                     var strBox = textbox112(str, {
                         color: 'red'
-                    }, undefined, undefined, ex.height()/2 + margin);
+                    }, undefined, ex.height()/3, ex.height()/2 + margin);
                     insertButtonTextbox112(strBox, strButton, 'BUTTON');
                 }
                 else if (expectedResult == "Integer"){
@@ -869,7 +869,7 @@ var main = function(ex) {
                     })
                     var intBox = textbox112(str, {
                         color: 'red'
-                    }, undefined, undefined, ex.height()/2 + margin);
+                    }, undefined, ex.height()/3, ex.height()/2 + margin);
                     insertButtonTextbox112(intBox, intButton, 'BUTTON');
                 }
                 else if (expectedResult == "Float"){
@@ -883,7 +883,7 @@ var main = function(ex) {
                     })
                     var floatBox = textbox112(str, {
                         color: 'red'
-                    }, undefined, undefined, ex.height()/2 + margin);
+                    }, undefined, ex.height()/3, ex.height()/2 + margin);
                     insertButtonTextbox112(floatBox, floatButton, 'BUTTON');
                 }
                 else if (expectedResult == "Boolean"){
@@ -897,7 +897,7 @@ var main = function(ex) {
                     })
                     var boolBox = textbox112(str, {
                         color: 'red'
-                    }, undefined, undefined, ex.height()/2 + margin);
+                    }, undefined, ex.height()/3, ex.height()/2 + margin);
                     insertButtonTextbox112(boolBox, boolButton, 'BUTTON');
                 }
                 saveData();
@@ -926,13 +926,15 @@ var main = function(ex) {
             console.log(dragInfo.value);
             console.log(dragInfo.typeOfElem[i]);
             //check if they've attempted all answers (if not, at least one of the boxes are located on the bottom)
-            if (dragInfo.rect[i].bottom == 337.75 || 
-                dragInfo.rect[i].bottom == 337.75 + 60) {
+            console.log(dragInfo.rect[8].bottom);
+            console.log(dragInfo.rect[15].bottom);
+            //Changed on herokupp, need to figure out a better way to keep track of this
+            if (dragInfo.rect[i].bottom == 368 || 
+                dragInfo.rect[i].bottom == 368 + 60) {
                 ex.alert("Keep trying!", {color: "red"});
                 ex.chromeElements.submitButton.enable();
                 return;
-            }
-            if (dragInfo.rect[i].left == dragInfo.rect[0].left) {
+            } else if (dragInfo.rect[i].left == dragInfo.rect[0].left) {
                 //i-8 because the list containing the values is indexed 0-8
                 if (dragInfo.typeOfElem[i-8] == "Integer") { 
                     intCorrect++;
@@ -942,7 +944,7 @@ var main = function(ex) {
                     ex.graphics.ctx.strokeRect(dragInfo.rect[i].left, dragInfo.rect[i].top,
                                                dragInfo.rect[i].width, dragInfo.rect[i].height);
                 }
-            } if (dragInfo.rect[i].left == dragInfo.rect[2].left) {
+            } else if (dragInfo.rect[i].left == dragInfo.rect[2].left) {
                 if (dragInfo.typeOfElem[i-8] == "Boolean") {
                     boolCorrect++;
                 } else {
