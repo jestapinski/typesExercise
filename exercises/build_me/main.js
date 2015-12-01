@@ -914,6 +914,7 @@ var main = function(ex) {
             //check if they've attempted all answers (if not, at least one of the boxes are located on the bottom)
             console.log(dragInfo.rect[8].bottom);
             console.log(dragInfo.rect[15].bottom);
+<<<<<<< HEAD
             if (dragInfo.rect[i].bottom == 417.34722375 || 
                 dragInfo.rect[i].bottom == 417.34722375 + 60) {
                 ex.alert("Keep trying!", {color: "red"});
@@ -921,6 +922,15 @@ var main = function(ex) {
                 return;
             }
             else if (dragInfo.rect[i].left == dragInfo.rect[0].left) {
+=======
+            //Changed on herokupp, need to figure out a better way to keep track of this
+            if (dragInfo.rect[i].bottom == 368 || 
+                dragInfo.rect[i].bottom == 368 + 60) {
+                ex.alert("Keep trying!", {color: "red"});
+                ex.chromeElements.submitButton.enable();
+                return;
+            } else if (dragInfo.rect[i].left == dragInfo.rect[0].left) {
+>>>>>>> 5ee787bafae776a671c09157533a6dcba68924f8
                 //i-8 because the list containing the values is indexed 0-8
                 if (dragInfo.typeOfElem[i-8] == "Integer") { 
                     intCorrect++;
