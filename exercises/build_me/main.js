@@ -37,6 +37,9 @@ Still To Do:
 
 var main = function(ex) {
     
+    console.log("ex.data.meta.mode");
+    console.log(ex.data.meta.mode);
+    
 
     //temporary variable to figure out what to draw (we can figure out a better way) later
     var practice = true;
@@ -64,40 +67,32 @@ var main = function(ex) {
     //Testing purposes
     // ex.data.instance = {state: undefined};
     console.log(ex.data.instance.state);
-
-
-    textbox112 = function(message, options, width, left, top, cx, cy, height) {
-            // Default Arguments!
-            if(typeof(width) == 'undefined') {width = ex.width()/4;}
-            if(typeof(cx) == 'undefined') {cx = ex.width() / 2;}
-            if(typeof(cy) == 'undefined') {cy = ex.height() / 2;}
-            if(typeof(height) == 'undefined') {height = width;}
-
-            var element = ex.alert(message, {
-                fontSize: (width/height * 20),
-                stay: true,
-                removeXButton: true,
-                opacity: 0.8
-            });
-            element.style(options);
-            if (typeof(left) == 'undefined') {left = cx - width / 2}
-            if (typeof(top) == 'undefined') {top = cy - height / 2}
-            element.position(left, top);
-
-            return element;
-        };
-    
-    insertTextAreaTextbox112 = function(TextboxElement, textarea) {
-            var identifier = "$TEXTAREA$";
-            ex.insertDropdown(TextboxElement, identifier, textarea);
-    }
-
-    insertButtonTextbox112 = function(TextboxElement, button, identifier) {
-            ex.insertDropdown(TextboxElement, identifier, button);
-        };
+    ex.data.instance.state = ex.unload(saveData);
 
     //Unloading save state
-
+    if (ex.data.instance.state != undefined){
+        //There is some kind of save state
+        //If user is on first '4' questions, it is first mode
+        if (ex.data.instance.state.userQuestionNumber != undefined){
+            userQuestionNumber = ex.data.instance.state.userQuestionNumber;
+            if (userQuestionNumber < 4){
+                //In first mode
+                practice = true;
+                dragInfo = ex.data.instance.state.dragInfo;
+                userScore = ex.data.instance.state.userScore;
+                playPracticeGame();
+            }
+            else{
+                //Other mode
+                practice = false;
+                playQuizGame();
+            }
+        }
+        else{
+            userQuestionNumber = 0;
+            playPracticeGame();
+        }
+    }
     // ex.data.meta.mode = "practice";
 
     //always quiz-immediate
@@ -133,7 +128,35 @@ var main = function(ex) {
 
     //A good place to start is the kitchen sink
 
+    textbox112 = function(message, options, width, left, top, cx, cy, height) {
+            // Default Arguments!
+            if(typeof(width) == 'undefined') {width = ex.width()/4;}
+            if(typeof(cx) == 'undefined') {cx = ex.width() / 2;}
+            if(typeof(cy) == 'undefined') {cy = ex.height() / 2;}
+            if(typeof(height) == 'undefined') {height = width;}
 
+            var element = ex.alert(message, {
+                fontSize: (width/height * 20),
+                stay: true,
+                removeXButton: true,
+                opacity: 0.8
+            });
+            element.style(options);
+            if (typeof(left) == 'undefined') {left = cx - width / 2}
+            if (typeof(top) == 'undefined') {top = cy - height / 2}
+            element.position(left, top);
+
+            return element;
+        };
+    
+    insertTextAreaTextbox112 = function(TextboxElement, textarea) {
+            var identifier = "$TEXTAREA$";
+            ex.insertDropdown(TextboxElement, identifier, textarea);
+    }
+
+    insertButtonTextbox112 = function(TextboxElement, button, identifier) {
+            ex.insertDropdown(TextboxElement, identifier, button);
+        };
 
     //Keep track of score regardless, only care if in quiz-delay or immediate mode
 
@@ -961,11 +984,11 @@ var main = function(ex) {
         }
         saveData();
         total = userScore + intCorrect + boolCorrect + strCorrect + floatCorrect;
-        var totalScore = (10 * total / 12);
+        var totalScore = (total / 12);
         //Set the grade
-        //if (ex.data.meta.mode == "quiz-delay"){
-        // ex.setGrade(totalScore, "Good job!");
-        //}
+        if (ex.data.meta.mode == "quiz-delay" || ex.data.meta.mode == "quiz-immediate"){
+        ex.setGrade(totalScore, "Good job!");
+        }
         ex.showFeedback(total.toString().concat("/12"));
         //disable moving things after submitting
         for (var i = 0; i < dragInfo.rect.length; i++) {
@@ -985,35 +1008,6 @@ var main = function(ex) {
         return;
     }
 
-
-    if (ex.data.instance.state != undefined){
-        //There is some kind of save state
-        //If user is on first '4' questions, it is first mode
-        if (ex.data.instance.state.userQuestionNumber != undefined){
-            userQuestionNumber = ex.data.instance.state.userQuestionNumber;
-            if (userQuestionNumber < 4){
-                //In first mode
-                practice = true;
-                dragInfo = ex.data.instance.state.dragInfo;
-                userScore = ex.data.instance.state.userScore;
-                playPracticeGame();
-            }
-            else{
-                //Other mode
-                practice = false;
-                playQuizGame();
-            }
-        }
-        else{
-            userQuestionNumber = 0;
-            if (ex.data.meta.mode == "quiz-immediate"){
-            runQuizImmediateMode(ex);
-            }
-            else{
-                runQuizDelay(ex);
-            }
-            }
-        }
 
 //Woo switch cases
     if (ex.data.instance.state == undefined){
