@@ -39,6 +39,8 @@ var main = function(ex) {
     
     console.log("ex.data.meta.mode");
     console.log(ex.data.meta.mode);
+    var initialized = true;
+    // ex.data.instance.state = undefined;
     
 
     //temporary variable to figure out what to draw (we can figure out a better way) later
@@ -67,7 +69,7 @@ var main = function(ex) {
     //Testing purposes
     // ex.data.instance = {state: undefined};
     console.log(ex.data.instance.state);
-    ex.data.instance.state = ex.unload(saveData);
+    // ex.data.instance.state = ex.unload(saveData);
 
     //Unloading save state
     if (ex.data.instance.state != undefined){
@@ -76,15 +78,19 @@ var main = function(ex) {
         if (ex.data.instance.state.userQuestionNumber != undefined){
             userQuestionNumber = ex.data.instance.state.userQuestionNumber;
             if (userQuestionNumber < 4){
+                initialized = false;
                 //In first mode
                 practice = true;
                 dragInfo = ex.data.instance.state.dragInfo;
                 userScore = ex.data.instance.state.userScore;
+                console.log("userscore");
+                console.log(userScore);
                 playPracticeGame();
             }
             else{
                 //Other mode
                 practice = false;
+                userScore = ex.data.instance.state.userScore;
                 playQuizGame();
             }
         }
@@ -448,36 +454,40 @@ var main = function(ex) {
     function playPracticeGame(){
 
         ex.chromeElements.submitButton.disable(); 
-        dragInfo.rect = [];
-        dragInfo.value = undefined;
-        dragInfo.typeOfElem = undefined;
+
         if (userQuestionNumber > 3){
             practice = false;
             playQuizGame();
             return;
         }
+        dragInfo.rect = [];
         //Randomly Generate an element and type
-        var elementType = randomIndex(0, listOfAllTypes.length - 1);
-        var actualType;
-        if (elementType == 0){
-            actualType = "String";
+        if (initialized){
+            dragInfo.value = undefined;
+            dragInfo.typeOfElem = undefined;
+            var elementType = randomIndex(0, listOfAllTypes.length - 1);
+            var actualType;
+            if (elementType == 0){
+                actualType = "String";
+            }
+            else if (elementType == 1){
+                actualType = "Integer";
+            }
+            else if (elementType == 2){
+                actualType = "Float";
+            } 
+            else{
+                actualType = "Boolean";
+            }
+            var actualElementList = listOfAllTypes[elementType];
+            console.log(actualElementList);
+            var actualElement = actualElementList[randomIndex(0, actualElementList.length - 1)];
+            console.log(actualElement);
+            dragInfo.value = actualElement;
+            dragInfo.typeOfElem = actualType;
         }
-        else if (elementType == 1){
-            actualType = "Integer";
-        }
-        else if (elementType == 2){
-            actualType = "Float";
-        } 
-        else{
-            actualType = "Boolean";
-        }
-        var actualElementList = listOfAllTypes[elementType];
-        console.log(actualElementList);
-        var actualElement = actualElementList[randomIndex(0, actualElementList.length - 1)];
-        console.log(actualElement);
-        dragInfo.value = actualElement;
-        dragInfo.typeOfElem = actualType; 
         ex.graphics.ctx.clearRect(0,0,ex.width(),ex.height());
+        initialized = true;
         
         //Create graphics as needed
         // var width = ex.width()/2;
