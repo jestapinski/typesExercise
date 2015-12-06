@@ -72,6 +72,7 @@ var main = function(ex) {
     var listOfBoolTypes = ["True", "False", "True or False", "0.0 == 0", 
                            "True or 0", "1 and False", "5 == 6", "15 != 112", "\'16\' != 16"];
     var listOfAllTypes = [listOfStringTypes, listOfIntTypes, listOfFloatTypes, listOfBoolTypes];
+    var isSubmitted = false;
 
     //Testing purposes
     // ex.data.instance = {state: undefined};
@@ -82,6 +83,7 @@ var main = function(ex) {
     if (ex.data.instance.state != undefined){
         //There is some kind of save state
         //If user is on first '4' questions, it is first mode
+        isSubmitted = ex.data.instance.state.isSubmitted;
         if (ex.data.instance.state.userQuestionNumber != undefined){
             userQuestionNumber = ex.data.instance.state.userQuestionNumber;
             if (userQuestionNumber < 4){
@@ -118,6 +120,7 @@ var main = function(ex) {
         data.userQuestionNumber = userQuestionNumber;
         data.dragInfo = dragInfo;
         data.userScore = userScore;
+        data.isSubmitted = isSubmitted;
         if (ex.data.meta.mode == "quiz-delay" || ex.data.meta.mode == "quiz-immediate"){
         ex.saveState(data);
         }
@@ -558,8 +561,10 @@ var main = function(ex) {
         console.log(initialized);
 
         //In dragInfo.rect, first 8 are placement boxes, next 8 are options
-
-        ex.chromeElements.submitButton.enable(); 
+        console.log(ex.data.instance.state.isSubmitted);
+        if (isSubmitted){
+            ex.chromeElements.submitButton.disable(); 
+        }
         if (initialized){
             dragInfo.rect = [];
             dragInfo.value = [];
@@ -1280,6 +1285,8 @@ var main = function(ex) {
 
     //Quiz feedback (using submit button) (putting types into correct buckets)
     ex.chromeElements.submitButton.on("click", function() {
+        isSubmitted = true;
+        saveData();
         provideQuizFeedback(ex.data.bot1, ex.data.bot2);
     });
   
