@@ -44,7 +44,7 @@ var main = function(ex) {
     console.log("ex.data.meta.mode");
     console.log(ex.data.meta.mode);
     var initialized = true;
-    // ex.data.instance.state = undefined;
+    //ex.data.instance.state = undefined;
     
 
     //temporary variable to figure out what to draw (we can figure out a better way) later
@@ -57,6 +57,7 @@ var main = function(ex) {
     dragInfo.mouseLastX = 0;
     dragInfo.mouseLastY = 0;
     var showAgain = true;
+    var total;
 
     var listOfStringTypes = ["\'a\'", "\'A\'", "\'hello\'", "chr(97)", "\'0\'", "\'True\'", 
                              "1 and \'hi'\'", "0 or \'and\'", "\'112\' or 112", 
@@ -92,8 +93,8 @@ var main = function(ex) {
                 practice = true;
                 dragInfo = ex.data.instance.state.dragInfo;
                 userScore = ex.data.instance.state.userScore;
-                console.log("userscore");
-                console.log(userScore);
+                //console.log("userscore");
+                //console.log(userScore);
                 playPracticeGame();
             }
             else{
@@ -117,6 +118,9 @@ var main = function(ex) {
 
     function saveData(){
         var data = {};
+        data.bot1 = ex.data.bot1;
+        data.bot2 = ex.data.bot2;
+        data.total = total;
         data.userQuestionNumber = userQuestionNumber;
         data.dragInfo = dragInfo;
         data.userScore = userScore;
@@ -299,8 +303,8 @@ var main = function(ex) {
                 ex.graphics.ctx.fillText(rectangle.text, rectangle.left + rectangle.width/2, rectangle.top + rectangle.height/2);
             }
             else{
-             ex.graphics.ctx.strokeRect(rectangle.left,
-                    rectangle.top, rectangle.width, rectangle.height);   
+                ex.graphics.ctx.strokeRect(rectangle.left,
+                                           rectangle.top, rectangle.width, rectangle.height);   
             }
         };
         rectangle.clicked = function(x, y){
@@ -520,9 +524,9 @@ var main = function(ex) {
                 actualType = "Boolean";
             }
             var actualElementList = listOfAllTypes[elementType];
-            console.log(actualElementList);
+            //console.log(actualElementList);
             var actualElement = actualElementList[randomIndex(0, actualElementList.length - 1)];
-            console.log(actualElement);
+            //console.log(actualElement);
             dragInfo.value = actualElement;
             dragInfo.typeOfElem = actualType;
         }
@@ -539,7 +543,7 @@ var main = function(ex) {
         var option1 = createRectangleObject(ex.width()/2 - 2* margin - 2* width, 3 * ex.height() / 4, width, 75, "#33FFAA", "Integer");
         // option1.draw();
         //Need to append to list rather than overwrite
-        console.log(dragInfo.rect);
+        //console.log(dragInfo.rect);
         dragInfo.rect.push(option1);
         var option2 = createRectangleObject(option1.left + margin + width, 3 * ex.height()/4, width, 75, "#AAAAAA", "String");
         dragInfo.rect.push(option2);
@@ -563,9 +567,11 @@ var main = function(ex) {
         //In dragInfo.rect, first 8 are placement boxes, next 8 are options
         console.log(ex.data.instance.state.isSubmitted);
         if (isSubmitted){
-            ex.chromeElements.submitButton.disable(); 
+            ex.chromeElements.submitButton.disable();
+            ex.chromeElements.displayCAButton.disable();
         }
         if (initialized){
+            ex.chromeElements.submitButton.enable();
             dragInfo.rect = [];
             dragInfo.value = [];
             dragInfo.typeOfElem = [];
@@ -644,7 +650,7 @@ var main = function(ex) {
 
             //Create graphics as needed
             //Need to append to list rather than overwrite
-            console.log(dragInfo.rect);
+            //console.log(dragInfo.rect);
             // dragInfo.rect = [];
             // dragInfo.value = [];
             // dragInfo.typeOfElem = [];
@@ -781,7 +787,7 @@ var main = function(ex) {
 
             ex.data.bot1 = option5.bottom;
             ex.data.bot2 = option1.bottom;
-            console.log(dragInfo.rect)
+            //console.log(dragInfo.rect)
             saveData();
         }
         // else{
@@ -791,6 +797,8 @@ var main = function(ex) {
         //     }
         // }
         else{
+            ex.data.bot1 = ex.data.instance.state.bot1;
+            ex.data.bot2 = ex.data.instance.state.bot2;
             //First 12 are boxes, rest are options
             var placementRectangleInt1 = createRectangleObject(dragInfo.rect[0].left, dragInfo.rect[0].top, dragInfo.rect[0].width, dragInfo.rect[0].height, dragInfo.rect[0].color, dragInfo.rect[0].text, true);
             dragInfo.rect[0] = (placementRectangleInt1);
@@ -840,32 +848,129 @@ var main = function(ex) {
             dragInfo.rect[11] = (placementRectangleFloat3);
             placementRectangleFloat3.draw();
 
-            var option1 = createRectangleObject(dragInfo.rect[12].left, dragInfo.rect[12].top, dragInfo.rect[12].width, dragInfo.rect[12].height, dragInfo.rect[12].color, dragInfo.rect[12].text);
+            var option1 = createRectangleObject(dragInfo.rect[12].left, dragInfo.rect[12].top, dragInfo.rect[12].width, dragInfo.rect[12].height, dragInfo.rect[12].color, dragInfo.rect[12].text, false);
             dragInfo.rect[12] = (option1);
             
-            var option2 = createRectangleObject(dragInfo.rect[13].left, dragInfo.rect[13].top, dragInfo.rect[13].width, dragInfo.rect[13].height, dragInfo.rect[13].color, dragInfo.rect[13].text);
+            var option2 = createRectangleObject(dragInfo.rect[13].left, dragInfo.rect[13].top, dragInfo.rect[13].width, dragInfo.rect[13].height, dragInfo.rect[13].color, dragInfo.rect[13].text, false);
             dragInfo.rect[13] = (option2);
 
-            var option3 = createRectangleObject(dragInfo.rect[14].left, dragInfo.rect[14].top, dragInfo.rect[14].width, dragInfo.rect[14].height, dragInfo.rect[14].color, dragInfo.rect[14].text);
+            var option3 = createRectangleObject(dragInfo.rect[14].left, dragInfo.rect[14].top, dragInfo.rect[14].width, dragInfo.rect[14].height, dragInfo.rect[14].color, dragInfo.rect[14].text, false);
             dragInfo.rect[14] = (option3);
 
-            var option4 = createRectangleObject(dragInfo.rect[15].left, dragInfo.rect[15].top, dragInfo.rect[15].width, dragInfo.rect[15].height, dragInfo.rect[15].color, dragInfo.rect[15].text);
+            var option4 = createRectangleObject(dragInfo.rect[15].left, dragInfo.rect[15].top, dragInfo.rect[15].width, dragInfo.rect[15].height, dragInfo.rect[15].color, dragInfo.rect[15].text, false);
             dragInfo.rect[15] = (option4);
 
-            var option5 = createRectangleObject(dragInfo.rect[16].left, dragInfo.rect[16].top, dragInfo.rect[16].width, dragInfo.rect[16].height, dragInfo.rect[16].color, dragInfo.rect[16].text);
+            var option5 = createRectangleObject(dragInfo.rect[16].left, dragInfo.rect[16].top, dragInfo.rect[16].width, dragInfo.rect[16].height, dragInfo.rect[16].color, dragInfo.rect[16].text, false);
             dragInfo.rect[16] = (option5);
             
-            var option6 = createRectangleObject(dragInfo.rect[17].left, dragInfo.rect[17].top, dragInfo.rect[17].width, dragInfo.rect[17].height, dragInfo.rect[17].color, dragInfo.rect[17].text);
+            var option6 = createRectangleObject(dragInfo.rect[17].left, dragInfo.rect[17].top, dragInfo.rect[17].width, dragInfo.rect[17].height, dragInfo.rect[17].color, dragInfo.rect[17].text, false);
             dragInfo.rect[17] = (option6);
             
-            var option7 = createRectangleObject(dragInfo.rect[18].left, dragInfo.rect[18].top, dragInfo.rect[18].width, dragInfo.rect[18].height, dragInfo.rect[18].color, dragInfo.rect[18].text);
+            var option7 = createRectangleObject(dragInfo.rect[18].left, dragInfo.rect[18].top, dragInfo.rect[18].width, dragInfo.rect[18].height, dragInfo.rect[18].color, dragInfo.rect[18].text, false);
             dragInfo.rect[18] = (option7);
 
-            var option8 = createRectangleObject(dragInfo.rect[19].left, dragInfo.rect[19].top, dragInfo.rect[19].width, dragInfo.rect[19].height, dragInfo.rect[19].color, dragInfo.rect[19].text);
+            var option8 = createRectangleObject(dragInfo.rect[19].left, dragInfo.rect[19].top, dragInfo.rect[19].width, dragInfo.rect[19].height, dragInfo.rect[19].color, dragInfo.rect[19].text, false);
             dragInfo.rect[19] = (option8);
-
-
+            
+            if (isSubmitted){
+                for (var i = 0; i < dragInfo.rect.length; i++) {
+                    dragInfo.rect[i].clicked = function() {
+                        return false;
+                    }
+                //Draw the red rectangles after submitted 
+                } //for (var i = 12; i < 20; i++) {
+                  //  console.log("red rectangles???");
+                  //  console.log(i);
+                  //  console.log(dragInfo.value[i-12]);
+                  //  console.log(dragInfo.typeOfElem[i-12]);
+                  //  if (dragInfo.typeOfElem[i-12] == "Integer") {
+                  //      if (dragInfo.rect[i].left == dragInfo.rect[0].left) {
+                  //      } else{
+                  //          ex.graphics.ctx.lineWidth = "3";
+                  //          ex.graphics.ctx.strokeStyle = "red";
+                  //          ex.graphics.ctx.strokeRect(dragInfo.rect[i].left, dragInfo.rect[i].top,
+                  //                                     dragInfo.rect[i].width, dragInfo.rect[i].height);
+                  //          console.log("drew in integer");
+                  //      }
+                  //  
+                //
+                  // } else if (dragInfo.typeOfElem[i-12] == "Boolean") {
+                  //     if (dragInfo.rect[i].left == dragInfo.rect[3].left) {
+                  //     } else {
+                  //         ex.graphics.ctx.lineWidth = "3";
+                  //         ex.graphics.ctx.strokeStyle = "red";
+                  //         ex.graphics.ctx.strokeRect(dragInfo.rect[i].left, dragInfo.rect[i].top,
+                  //                                    dragInfo.rect[i].width, dragInfo.rect[i].height);
+                  //         console.log("drew in boolean");
+                  //     }
+                  // }
+                
+                  //  } else if (dragInfo.typeOfElem[i-12] == "String") {
+                  //      if (dragInfo.rect[i].left == dragInfo.rect[6].left) {
+                  //      } else {
+                  //          ex.graphics.ctx.lineWidth = "3";
+                  //          ex.graphics.ctx.strokeStyle = "red";
+                  //          ex.graphics.ctx.strokeRect(dragInfo.rect[i].left, dragInfo.rect[i].top,
+                  //                                     dragInfo.rect[i].width, dragInfo.rect[i].height);
+                  //          console.log("drew in string");
+                  //      }
+                  //  } else if (dragInfo.typeOfElem[i-12] == "Float") {
+                  //      if (dragInfo.rect[i].left == dragInfo.rect[9].left) {
+                  //      } else{
+                  //          ex.graphics.ctx.lineWidth = "3";
+                  //          ex.graphics.ctx.strokeStyle = "red";
+                  //          ex.graphics.ctx.strokeRect(dragInfo.rect[i].left, dragInfo.rect[i].top,
+                  //                                     dragInfo.rect[i].width, dragInfo.rect[i].height);
+                  //          console.log("dreww in float");
+                  //      }
+                  //  }
+                
+                    //if (dragInfo.rect[i].left == dragInfo.rect[0].left) {
+                    //    console.log("I'm an integer");
+                    //    //i-12 because the list containing the values is indexed 0-8
+                    //    if (dragInfo.typeOfElem[i-12] != "Integer") { 
+                    //        console.log("hello integer");
+                    //        ex.graphics.ctx.lineWidth = "3";
+                    //        ex.graphics.ctx.strokeStyle = "red";
+                    //        ex.graphics.ctx.strokeRect(dragInfo.rect[i].left, dragInfo.rect[i].top,
+                    //                                   dragInfo.rect[i].width, dragInfo.rect[i].height);
+                    //    }
+                    //} else if (dragInfo.rect[i].left == dragInfo.rect[3].left) {
+                    //    console.log("I'm a boolean");
+                    //    if (dragInfo.typeOfElem[i-12] != "Boolean") {
+                    //        console.log("hello boolean");
+                    //        ex.graphics.ctx.lineWidth = "3";
+                    //        ex.graphics.ctx.strokeStyle = "red";
+                    //        ex.graphics.ctx.strokeRect(dragInfo.rect[i].left, dragInfo.rect[i].top,
+                    //                                   dragInfo.rect[i].width, dragInfo.rect[i].height);
+                    //    }
+                    //} else if (dragInfo.rect[i].left == dragInfo.rect[6].left) {
+                    //    console.log("I;m a string");
+                    //    if (dragInfo.typeOfElem[i-12] != "String") {
+                    //        console.log("hello string");
+                    //        ex.graphics.ctx.lineWidth = "3";
+                    //        ex.graphics.ctx.strokeStyle = "red";
+                    //        ex.graphics.ctx.strokeRect(dragInfo.rect[i].left, dragInfo.rect[i].top,
+                    //                                   dragInfo.rect[i].width, dragInfo.rect[i].height);
+                    //    }
+                    //} else if (dragInfo.rect[i].left == dragInfo.rect[9].left) {
+                    //    console.log("I'm a float");
+                    //    if (dragInfo.typeOfElem[i-12] != "Float") {
+                    //        console.log("hello float");
+                    //        ex.graphics.ctx.lineWidth = "3";
+                    //        ex.graphics.ctx.strokeStyle = "red";
+                    //        ex.graphics.ctx.strokeRect(dragInfo.rect[i].left, dragInfo.rect[i].top,
+                    //                                   dragInfo.rect[i].width, dragInfo.rect[i].height);
+                    //    }
+                    //}
+                total = ex.data.instance.state.total;
+                ex.showFeedback(total.toString().concat("/12"));
+                }
+                
+            
         }
+
+        //}
         // else{
         //     console.log(dragInfo.rect);
         //     for (var j = 0; j < dragInfo.rect.length; j++){
@@ -909,7 +1014,7 @@ var main = function(ex) {
             ex.graphics.ctx.font = "24px Arial Bold";
             ex.graphics.ctx.textAlign = "center";
             ex.graphics.ctx.clearRect(0,0,ex.width(),ex.height());
-            console.log(dragInfo.rect);
+            //console.log(dragInfo.rect);
             for (var i = 0; i < dragInfo.rect.length; i++){
                 dragInfo.rect[i].draw();
             };
@@ -936,7 +1041,7 @@ var main = function(ex) {
             ex.graphics.ctx.font = "17px Arial Bold";
             ex.graphics.ctx.textAlign = "center";
             ex.graphics.ctx.clearRect(0,0,ex.width(),ex.height());
-            console.log(dragInfo.rect);
+            //console.log(dragInfo.rect);
             for (var i = 0; i < dragInfo.rect.length; i++){
                 // dragInfo.rect[i].draw();
                 dragInfo.rect[i].draw();
@@ -957,8 +1062,8 @@ var main = function(ex) {
                 // }
                 //console.log(options[i]);
                 //console.log(optionsTypes[i]);
-                console.log(dragInfo.value[i]);
-                console.log(dragInfo.typeOfElem[i]);
+                //console.log(dragInfo.value[i]);
+                //console.log(dragInfo.typeOfElem[i]);
             };
 
             ex.graphics.ctx.fillText("Drag each rectangle into their type box. (Not every box will be filled!)", ex.width() / 2, ex.height() / 8);
@@ -990,9 +1095,9 @@ var main = function(ex) {
 //options, width, left, top, cx, cy,
 
     function providePracticeFeedback(value, expectedResult, actualResult, i) {
-        console.log("here");
-        console.log(userAttempts);
-        console.log(userScore);
+        //console.log("here");
+        //console.log(userAttempts);
+        //console.log(userScore);
         userQuestionNumber++;
         saveData();
         var margin = -40;
@@ -1215,7 +1320,7 @@ var main = function(ex) {
         var boolCorrect = 0;
         var strCorrect = 0;
         var floatCorrect = 0;
-        var total = 0;
+        //var total = 0;
         //8 answers to check and these rectangles are indexed 8-16
         //8 answers to check and these rectangles are indexed 12-20
         for (var j = 12; j < 20; j++) {    
@@ -1224,9 +1329,11 @@ var main = function(ex) {
                 dragInfo.rect[j].bottom == bottom2) {
                 ex.alert("Keep trying!", {color: "red"});
                 ex.chromeElements.submitButton.enable();
+                ex.chromeElements.displayCAButton.disable();
                 return;
             }
         } for (var i = 12; i < 20; i++) {
+            isSubmitted = true;
             if (dragInfo.rect[i].left == dragInfo.rect[0].left) {
                 //i-8 because the list containing the values is indexed 0-8
                 if (dragInfo.typeOfElem[i-12] == "Integer") { 
@@ -1234,6 +1341,7 @@ var main = function(ex) {
                 } else {
                     ex.graphics.ctx.lineWidth = "3";
                     ex.graphics.ctx.strokeStyle = "red";
+                    console.log("drawing again");
                     ex.graphics.ctx.strokeRect(dragInfo.rect[i].left, dragInfo.rect[i].top,
                                                dragInfo.rect[i].width, dragInfo.rect[i].height);
                 }
@@ -1243,6 +1351,7 @@ var main = function(ex) {
                 } else {
                     ex.graphics.ctx.lineWidth = "3";
                     ex.graphics.ctx.strokeStyle = "red";
+                    console.log("drawing agian??");
                     ex.graphics.ctx.strokeRect(dragInfo.rect[i].left, dragInfo.rect[i].top,
                                                dragInfo.rect[i].width, dragInfo.rect[i].height);
                 }
@@ -1252,6 +1361,7 @@ var main = function(ex) {
                 } else {
                     ex.graphics.ctx.lineWidth = "3";
                     ex.graphics.ctx.strokeStyle = "red";
+                    console.log("drawing 3rd wtf");
                     ex.graphics.ctx.strokeRect(dragInfo.rect[i].left, dragInfo.rect[i].top,
                                                dragInfo.rect[i].width, dragInfo.rect[i].height);
                 }
@@ -1261,19 +1371,21 @@ var main = function(ex) {
                 } else {
                     ex.graphics.ctx.lineWidth = "3";
                     ex.graphics.ctx.strokeStyle = "red";
+                    console.log("drawing 4th wtf");
                     ex.graphics.ctx.strokeRect(dragInfo.rect[i].left, dragInfo.rect[i].top,
                                                dragInfo.rect[i].width, dragInfo.rect[i].height);
                 }
             }
         }
-        saveData();
         total = userScore + intCorrect + boolCorrect + strCorrect + floatCorrect;
+        saveData();
         var totalScore = (total / 12);
         //Set the grade
         if (ex.data.meta.mode == "quiz-delay" || ex.data.meta.mode == "quiz-immediate"){
         ex.setGrade(totalScore, "Good job!");
         }
         ex.showFeedback(total.toString().concat("/12"));
+        ex.chromeElements.displayCAButton.disable();
         //disable moving things after submitting
         for (var i = 0; i < dragInfo.rect.length; i++) {
             dragInfo.rect[i].clicked = function() {
@@ -1285,7 +1397,6 @@ var main = function(ex) {
 
     //Quiz feedback (using submit button) (putting types into correct buckets)
     ex.chromeElements.submitButton.on("click", function() {
-        isSubmitted = true;
         saveData();
         provideQuizFeedback(ex.data.bot1, ex.data.bot2);
     });
