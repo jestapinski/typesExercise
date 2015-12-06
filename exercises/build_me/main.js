@@ -37,6 +37,10 @@ Still To Do:
 
 var main = function(ex) {
     
+    ex.chromeElements.undoButton.disable();
+    ex.chromeElements.redoButton.disable();
+    ex.chromeElements.resetButton.disable();
+
     console.log("ex.data.meta.mode");
     console.log(ex.data.meta.mode);
     var initialized = true;
@@ -54,16 +58,19 @@ var main = function(ex) {
     dragInfo.mouseLastY = 0;
     var showAgain = true;
 
-    var listOfStringTypes = ["\'a\'", "\'A\'", "\'hello\'", "chr(97)", "\'0\'", "\'True\'",
+    var listOfStringTypes = ["\'a\'", "\'A\'", "\'hello\'", "chr(97)", "\'0\'", "\'True\'", 
                              "1 and \'hi'\'", "0 or \'and\'", "\'112\' or 112", 
-                             "\'0\' or 0", "0 or \'0\'", "\'112forlyfe\'"];
-    var listOfIntTypes = ["13", "42", "-124", "ord('a')", "0", "-6+7", 
-                          "4 or True", "0 or 0", "0 and 0", "0.0 or 0",
-                          "\'112\' and 112", "1 or False", "\'0\' and 0", "0 and \'0\'"]; //Can dynamically do these and will add later
+                             "0 or \'0\'", "\'112forlyfe\'", "\'world\'", "\'False\'",
+                             "\'word\'", "\'serendipity\'", "\'solace\'", "\'chill\'"];
+    var listOfIntTypes = ["13", "42", "-124", "150", "6", "9", "11", "45+25", 
+                          "-7+4", "102351", "32", "49", "25", "ord('g')", "ord('7')",
+                          "5-7", "ord('4')", "ord('a')", "0", "-6+7", 
+                          "4 or True", "0.0 or 0", "1 or False", 
+                          "\'0\' and 0", "0 and \'0\'"]; //Can dynamically do these and will add later
     var listOfFloatTypes = ["1.", "42.999999", "0.1", "4.2", "math.pi", "0 or 0.0", 
-                            "1.0 + 3"];
+                            "1.0 + 3", "4.6 + 5", "8 + 4.3", "15 + 1.22", "math.cos(100)"];
     var listOfBoolTypes = ["True", "False", "True or False", "0.0 == 0", 
-                           "True or 0", "1 and False"];
+                           "True or 0", "1 and False", "5 == 6", "15 != 112", "\'16\' != 16"];
     var listOfAllTypes = [listOfStringTypes, listOfIntTypes, listOfFloatTypes, listOfBoolTypes];
 
     //Testing purposes
@@ -437,6 +444,34 @@ var main = function(ex) {
                         dragInfo.rect[i].right = dragInfo.rect[7].right;
                         dragInfo.rect[i].bottom = dragInfo.rect[7].bottom;
                         drawAll();
+                    } else if (rectsCollide(dragInfo.rect[i], dragInfo.rect[8])){
+                        dragInfo.rect[i].drag = false;
+                        dragInfo.rect[i].left = dragInfo.rect[8].left;
+                        dragInfo.rect[i].top = dragInfo.rect[8].top;
+                        dragInfo.rect[i].right = dragInfo.rect[8].right;
+                        dragInfo.rect[i].bottom = dragInfo.rect[8].bottom;
+                        drawAll();
+                    } else if (rectsCollide(dragInfo.rect[i], dragInfo.rect[9])){
+                        dragInfo.rect[i].drag = false;
+                        dragInfo.rect[i].left = dragInfo.rect[9].left;
+                        dragInfo.rect[i].top = dragInfo.rect[9].top;
+                        dragInfo.rect[i].right = dragInfo.rect[9].right;
+                        dragInfo.rect[i].bottom = dragInfo.rect[9].bottom;
+                        drawAll();
+                    } else if (rectsCollide(dragInfo.rect[i], dragInfo.rect[10])){
+                        dragInfo.rect[i].drag = false;
+                        dragInfo.rect[i].left = dragInfo.rect[10].left;
+                        dragInfo.rect[i].top = dragInfo.rect[10].top;
+                        dragInfo.rect[i].right = dragInfo.rect[10].right;
+                        dragInfo.rect[i].bottom = dragInfo.rect[10].bottom;
+                        drawAll();
+                    } else if (rectsCollide(dragInfo.rect[i], dragInfo.rect[11])){
+                        dragInfo.rect[i].drag = false;
+                        dragInfo.rect[i].left = dragInfo.rect[11].left;
+                        dragInfo.rect[i].top = dragInfo.rect[11].top;
+                        dragInfo.rect[i].right = dragInfo.rect[11].right;
+                        dragInfo.rect[i].bottom = dragInfo.rect[11].bottom;
+                        drawAll();
                     } else {
                         resetBox(dragInfo.rect[i]);
                     }
@@ -526,43 +561,62 @@ var main = function(ex) {
         dragInfo.rect = [];
         dragInfo.value = [];
         dragInfo.typeOfElem = [];
-        var placementRectangleInt1 = createRectangleObject(ex.width()/10, ex.height()/2.5, 100, 50, "#00FFFF", "wow", true);
+        var placementRectangleInt1 = createRectangleObject(ex.width()/10, ex.height()/2.5 - 60, 100, 50, "#00FFFF", "wow", true);
         dragInfo.rect.push(placementRectangleInt1);
         placementRectangleInt1.draw();
 
-        var placementRectangleInt2 = createRectangleObject(ex.width()/10, ex.height()/2.5 + 60, 100, 50, "#00FFFF", "wow", true);
+        var placementRectangleInt2 = createRectangleObject(ex.width()/10, ex.height()/2.5, 100, 50, "#00FFFF", "wow", true);
         dragInfo.rect.push(placementRectangleInt2);
         placementRectangleInt2.draw();
 
+        var placementRectangleInt3 = createRectangleObject(ex.width()/10, ex.height()/2.5 + 60, 100, 50, "#00FFFF", "wow", true);
+        dragInfo.rect.push(placementRectangleInt3);
+        placementRectangleInt3.draw();
+
         var placementRectangleBool1 = createRectangleObject(placementRectangleInt1.left + ex.width()/4.5, 
-                                                           ex.height()/2.5, 100, 50, "#00FFFF", "wow", true);
+                                                           ex.height()/2.5 - 60, 100, 50, "#00FFFF", "wow", true);
         dragInfo.rect.push(placementRectangleBool1);
         placementRectangleBool1.draw();
 
         var placementRectangleBool2 = createRectangleObject(placementRectangleInt1.left + ex.width()/4.5, 
-                                                           ex.height()/2.5 + 60, 100, 50, "#00FFFF", "wow", true);
+                                                           ex.height()/2.5, 100, 50, "#00FFFF", "wow", true);
         dragInfo.rect.push(placementRectangleBool2);
         placementRectangleBool2.draw();
 
+        var placementRectangleBool3 = createRectangleObject(placementRectangleInt1.left + ex.width()/4.5, 
+                                                           ex.height()/2.5 + 60, 100, 50, "#00FFFF", "wow", true);
+        dragInfo.rect.push(placementRectangleBool3);
+        placementRectangleBool3.draw();
+
         var placementRectangleStr1 = createRectangleObject(placementRectangleBool1.left + ex.width()/4.5, 
-                                                          ex.height()/2.5, 100, 50, "#00FFFF", "wow", true);
+                                                          ex.height()/2.5 - 60, 100, 50, "#00FFFF", "wow", true);
         dragInfo.rect.push(placementRectangleStr1);
         placementRectangleStr1.draw();
 
         var placementRectangleStr2 = createRectangleObject(placementRectangleBool1.left + ex.width()/4.5, 
-                                                          ex.height()/2.5 + 60, 100, 50, "#00FFFF", "wow", true);
+                                                          ex.height()/2.5, 100, 50, "#00FFFF", "wow", true);
         dragInfo.rect.push(placementRectangleStr2);
         placementRectangleStr2.draw();
 
+        var placementRectangleStr3 = createRectangleObject(placementRectangleBool1.left + ex.width()/4.5, 
+                                                          ex.height()/2.5 + 60, 100, 50, "#00FFFF", "wow", true);
+        dragInfo.rect.push(placementRectangleStr3);
+        placementRectangleStr3.draw();
+
         var placementRectangleFloat1 = createRectangleObject(placementRectangleStr1.left + ex.width()/4.5, 
-                                                            ex.height()/2.5, 100, 50, "#00FFFF", "wow", true);
+                                                            ex.height()/2.5 - 60, 100, 50, "#00FFFF", "wow", true);
         dragInfo.rect.push(placementRectangleFloat1);
         placementRectangleFloat1.draw();
         
         var placementRectangleFloat2 = createRectangleObject(placementRectangleStr1.left + ex.width()/4.5, 
-                                                            ex.height()/2.5 + 60, 100, 50, "#00FFFF", "wow", true);
+                                                            ex.height()/2.5 , 100, 50, "#00FFFF", "wow", true);
         dragInfo.rect.push(placementRectangleFloat2);
         placementRectangleFloat2.draw();
+
+        var placementRectangleFloat3 = createRectangleObject(placementRectangleStr1.left + ex.width()/4.5, 
+                                                            ex.height()/2.5 + 60, 100, 50, "#00FFFF", "wow", true);
+        dragInfo.rect.push(placementRectangleFloat3);
+        placementRectangleFloat3.draw();
 
         //Generate 8 random options, 2 of each type
         options = [0,0,0,0,0,0,0,0];
@@ -571,39 +625,115 @@ var main = function(ex) {
         optionIndices = [0,1,2,3,4,5,6,7];
         optionIndices = unsort(optionIndices);
         
-        for (var i = 0; i < options.length; i++) {
+        var shortCircuitCount = 0; //Make sure we get this twice at most
+        //Make sure we get a type at most 3 times
+        var stringCount = 0;
+        var integerCount = 0;
+        var floatCount = 0;
+        var booleanCount = 0;
 
+        var i = 0;
+        while (i < options.length) {
+
+            var everythingElse = false; //If false, then good (check of miscellaneous constraints)
+            var theSame = false; //To make sure we don't get duplicates
             //Siphon each set of index to a certain group
-            //var elementType = randomIndex(0, listOfAllTypes.length-1);
+
             var elementType;
             var actualType;
-            if (i < 2) {
+            //Pick one of every type, last 4 are random
+            if (i == 0) {
                 elementType = 0;
                 actualType = "String";
+                stringCount++;
             }
-            else if (i >= 2 && i < 4) {
+            else if (i == 1) {
                 elementType = 1;
                 actualType = "Integer";
+                integerCount++;
             }
-            else if (i >= 4 && i < 6) {
+            else if (i == 2) {
                 elementType = 2;
                 actualType = "Float";
+                floatCount++;
             } 
-            else if (i >= 6 && i < options.length){
+            else if (i == 3) {
                 elementType = 3;
                 actualType = "Boolean";
+                booleanCount++;
+            //Last random 4;
+            } else {
+                elementType = randomIndex(0, 3);
+                if (elementType == 0) {
+                    actualType = "String";
+                } else if (elementType == 1) {
+                    actualType = "Integer";
+                } else if (elementType == 2) {
+                    actualType = "Float";
+                } else if (elementType == 3) {
+                    actualType = "Boolean";
+                }
             }
-            //Pick a random element from each group twice
+            //Pick a random element from their respective type
             var actualElementList = listOfAllTypes[elementType];
             var actualElement = actualElementList[randomIndex(0, actualElementList.length - 1)];
-            index = optionIndices.pop();
-                              
-            options[index] = actualElement;
-            optionsTypes[index] = actualType;
+               
+            //Check of max of 3 for each type
+            
+            if (actualType == "String") {
+                if (stringCount > 3) everythingElse = true;
+            } else if (actualType == "Integer") {
+                if (integerCount > 3) everythingElse = true;
+            } else if (actualType == "Float") {
+                if (floatCount > 3) everythingElse = true;
+            } else if (actualType == "Boolean") {
+                if (booleanCount > 3) everythingElse = true;
+            }
+            //Check for short circuiting (only a max of two)
+            if (actualElement.search("and") != -1) {
+                if (shortCircuitCount > 1) {
+                    everythingElse = true;
+                }
+            } else if(actualElement.search("or") != -1 && 
+                      actualElement.search("ord") == -1 &&
+                      actualElement.search("for") == -1) {
+                if (shortCircuitCount > 1) {
+                    everythingElse = true;
+                }
+            }
 
-            dragInfo.value[index] = actualElement;
-            dragInfo.typeOfElem[index] = actualType;
-           
+            if (everythingElse == false) {
+                for (var j = 0; j < options.length; j++) {
+                    if (options[j] == actualElement) {
+                        theSame = true;
+                    } 
+                }   
+            }
+            
+            //If pass all the constraints and not a duplicate, make it an option
+            if (theSame == false && everythingElse == false) {
+                index = optionIndices.pop();
+                options[index] = actualElement;
+                optionsTypes[index] = actualType;
+
+                dragInfo.value[index] = actualElement;
+                dragInfo.typeOfElem[index] = actualType;
+
+                if (actualType == "String") stringCount++;
+                if (actualType == "Integer") integerCount++;
+                if (actualType == "Float") floatCount++;
+                if (actualType == "Boolean") booleanCount++;
+                
+                if (actualElement.search("and") != -1) {
+                    shortCircuitCount++;
+                } else if (actualElement.search("or") != -1 && 
+                           actualElement.search("ord") == -1 &&
+                           actualElement.search("for") == -1) {
+                    shortCircuitCount++;
+                }
+
+                i++;
+            } 
             //PURPOSE??
             ex.graphics.ctx.clearRect(0,0,ex.width(),ex.height()); 
         };
@@ -622,7 +752,7 @@ var main = function(ex) {
         var option3 = createRectangleObject(option2.left + ex.width()/4.5, optionY0, 100, 50, "#7777FF", options[2]);
         dragInfo.rect.push(option3);
 
-        var option4 = createRectangleObject(option3.left + ex.width()/4.5, optionY0, 100, 50, "#FF7777", options[3]);
+        var option4 = createRectangleObject(option3.left + ex.width()/4.5, optionY0, 100, 50, "#997777", options[3]);
         dragInfo.rect.push(option4);
 
         var option5 = createRectangleObject(ex.width()/10, optionY0 + 60, 100, 50, "#CCFF00", options[4]);
@@ -634,8 +764,11 @@ var main = function(ex) {
         var option7 = createRectangleObject(option6.left + ex.width()/4.5, optionY0 + 60, 100, 50, "#9900CC", options[6]);
         dragInfo.rect.push(option7);
 
-        var option8 = createRectangleObject(option7.left + ex.width()/4.5, optionY0 + 60, 100, 50, "#C00000", options[7]);
+        var option8 = createRectangleObject(option7.left + ex.width()/4.5, optionY0 + 60, 100, 50, "#CCCCFF", options[7]);
         dragInfo.rect.push(option8);
+
+        ex.data.bot1 = option5.bottom;
+        ex.data.bot2 = option1.bottom;
 
         saveData();
         drawAll();
@@ -676,12 +809,20 @@ var main = function(ex) {
             ex.graphics.ctx.textAlign = "center";
             ex.graphics.ctx.clearRect(0,0,ex.width(),ex.height());
 
-            ex.graphics.ctx.fillText("Drag each rectangle into their type box.", ex.width() / 2, ex.height() / 8);
+            for (var i = 0; i < dragInfo.rect.length; i++){
+                dragInfo.rect[i].draw();
+                //console.log(options[i]);
+                //console.log(optionsTypes[i]);
+                console.log(dragInfo.value[i]);
+                console.log(dragInfo.typeOfElem[i]);
+            };
+
+            ex.graphics.ctx.fillText("Drag each rectangle into their type box. (Not every box will be filled!)", ex.width() / 2, ex.height() / 8);
             var firstTypeX0 = ex.width()/7;
             var secondTypeX0 = firstTypeX0 + ex.width()/4.5;
             var thirdTypeX0 = secondTypeX0 + ex.width()/4.5;
             var fourthTypeX0 = thirdTypeX0 + ex.width()/4.5;
-            var typeY0 = ex.height()/3;
+            var typeY0 = ex.height()/5;
 
             ex.graphics.ctx.fillText("int", firstTypeX0, typeY0);
             ex.graphics.ctx.fillText("bool", secondTypeX0, typeY0);
@@ -697,13 +838,7 @@ var main = function(ex) {
             //var floatType = ex.createParagraph(fourthTypeX0, typeY0,
             //                                   "float", {size: "large"});
 
-            for (var i = 0; i < dragInfo.rect.length; i++){
-                dragInfo.rect[i].draw();
-                //console.log(options[i]);
-                //console.log(optionsTypes[i]);
-                console.log(dragInfo.value[i]);
-                console.log(dragInfo.typeOfElem[i]);
-            };
+            
 
         }
     }
@@ -928,7 +1063,7 @@ var main = function(ex) {
     }
     }
 
-    function provideQuizFeedback() {
+    function provideQuizFeedback(bottom1, bottom2) {
         if (practice == true){
             ex.chromeElements.submitButton.enable();
             return;}
@@ -938,24 +1073,19 @@ var main = function(ex) {
         var floatCorrect = 0;
         var total = 0;
         //8 answers to check and these rectangles are indexed 8-16
-        for (var i = 8; i < 16; i++) {    
-            console.log(dragInfo.rect[i].left);
-            console.log(dragInfo.rect[0].left);
-            console.log(dragInfo.typeOfElem);
-            console.log(dragInfo.value);
-            console.log(dragInfo.typeOfElem[i]);
+        //8 answers to check and these rectangles are indexed 12-20
+        for (var j = 12; j < 20; j++) {    
             //check if they've attempted all answers (if not, at least one of the boxes are located on the bottom)
-            console.log(dragInfo.rect[8].bottom);
-            console.log(dragInfo.rect[15].bottom);
-            if (dragInfo.rect[i].bottom == 417.34722375 || 
-                dragInfo.rect[i].bottom == 417.34722375 + 60) {
+            if (dragInfo.rect[j].bottom == bottom1 || 
+                dragInfo.rect[j].bottom == bottom2) {
                 ex.alert("Keep trying!", {color: "red"});
                 ex.chromeElements.submitButton.enable();
                 return;
             }
-            else if (dragInfo.rect[i].left == dragInfo.rect[0].left) {
+        } for (var i = 12; i < 20; i++) {
+            if (dragInfo.rect[i].left == dragInfo.rect[0].left) {
                 //i-8 because the list containing the values is indexed 0-8
-                if (dragInfo.typeOfElem[i-8] == "Integer") { 
+                if (dragInfo.typeOfElem[i-12] == "Integer") { 
                     intCorrect++;
                 } else {
                     ex.graphics.ctx.lineWidth = "3";
@@ -963,8 +1093,8 @@ var main = function(ex) {
                     ex.graphics.ctx.strokeRect(dragInfo.rect[i].left, dragInfo.rect[i].top,
                                                dragInfo.rect[i].width, dragInfo.rect[i].height);
                 }
-            } else if (dragInfo.rect[i].left == dragInfo.rect[2].left) {
-                if (dragInfo.typeOfElem[i-8] == "Boolean") {
+            } else if (dragInfo.rect[i].left == dragInfo.rect[3].left) {
+                if (dragInfo.typeOfElem[i-12] == "Boolean") {
                     boolCorrect++;
                 } else {
                     ex.graphics.ctx.lineWidth = "3";
@@ -972,8 +1102,8 @@ var main = function(ex) {
                     ex.graphics.ctx.strokeRect(dragInfo.rect[i].left, dragInfo.rect[i].top,
                                                dragInfo.rect[i].width, dragInfo.rect[i].height);
                 }
-            } else if (dragInfo.rect[i].left == dragInfo.rect[4].left) {
-                if (dragInfo.typeOfElem[i-8] == "String") {
+            } else if (dragInfo.rect[i].left == dragInfo.rect[6].left) {
+                if (dragInfo.typeOfElem[i-12] == "String") {
                     strCorrect++;
                 } else {
                     ex.graphics.ctx.lineWidth = "3";
@@ -981,8 +1111,8 @@ var main = function(ex) {
                     ex.graphics.ctx.strokeRect(dragInfo.rect[i].left, dragInfo.rect[i].top,
                                                dragInfo.rect[i].width, dragInfo.rect[i].height);
                 }
-            } else if (dragInfo.rect[i].left == dragInfo.rect[6].left) {
-                if (dragInfo.typeOfElem[i-8] == "Float") {
+            } else if (dragInfo.rect[i].left == dragInfo.rect[9].left) {
+                if (dragInfo.typeOfElem[i-12] == "Float") {
                     floatCorrect++;
                 } else {
                     ex.graphics.ctx.lineWidth = "3";
@@ -1002,14 +1132,16 @@ var main = function(ex) {
         ex.showFeedback(total.toString().concat("/12"));
         //disable moving things after submitting
         for (var i = 0; i < dragInfo.rect.length; i++) {
-            dragInfo.rect[i].clicked = false;
+            dragInfo.rect[i].clicked = function() {
+                return false;
+            }
         }
 
     }
 
     //Quiz feedback (using submit button) (putting types into correct buckets)
     ex.chromeElements.submitButton.on("click", function() {
-        provideQuizFeedback();
+        provideQuizFeedback(ex.data.bot1, ex.data.bot2);
     });
   
     function runQuizDelayMode(){
