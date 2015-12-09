@@ -44,7 +44,7 @@ var main = function(ex) {
     console.log("ex.data.meta.mode");
     console.log(ex.data.meta.mode);
     var initialized = true;
-    //ex.data.instance.state = undefined;
+    // ex.data.instance.state = undefined;
     
 
     //temporary variable to figure out what to draw (we can figure out a better way) later
@@ -99,8 +99,10 @@ var main = function(ex) {
             }
             else{
                 //Other mode
+                initialized = ex.data.instance.state.initialized;
+                console.log("initialized");
+                console.log(initialized);
                 practice = false;
-                initialized = false;
                 dragInfo = ex.data.instance.state.dragInfo;
                 userScore = ex.data.instance.state.userScore;
                 playQuizGame();
@@ -499,8 +501,10 @@ var main = function(ex) {
     function playPracticeGame(){
 
         ex.chromeElements.submitButton.disable(); 
+        console.log(userQuestionNumber);
 
         if (userQuestionNumber > 3){
+            initialized = true;
             practice = false;
             playQuizGame();
             return;
@@ -564,7 +568,7 @@ var main = function(ex) {
 
     function playQuizGame() {
         console.log(initialized);
-
+        console.log("Testing")
         //In dragInfo.rect, first 8 are placement boxes, next 8 are options
         console.log(ex.data.instance.state.isSubmitted);
         if (isSubmitted){
@@ -756,7 +760,8 @@ var main = function(ex) {
                     }
 
                     i++;
-                } 
+                }
+                initialized = false;
                 saveData();
                 //PURPOSE??
                 ex.graphics.ctx.clearRect(0,0,ex.width(),ex.height()); 
@@ -789,6 +794,7 @@ var main = function(ex) {
             ex.data.bot1 = option5.bottom;
             ex.data.bot2 = option1.bottom;
             //console.log(dragInfo.rect)
+            initialized = false;
             saveData();
         }
         // else{
@@ -967,6 +973,8 @@ var main = function(ex) {
                 total = ex.data.instance.state.total;
                 ex.showFeedback(total.toString().concat("/12"));
                 }
+                initialized = false;
+                saveData();
                 
             
         }
@@ -1110,6 +1118,7 @@ var main = function(ex) {
                 hideButton.on("click", function() {
                     showAgain = false;
                     correctBox.remove();
+                    initialized = true;
                     ex.graphics.ctx.clearRect(0,0,ex.width(),ex.height());
                     playPracticeGame();
                 })
@@ -1117,6 +1126,7 @@ var main = function(ex) {
                 nahButton.on("click", function(){
                     correctBox.remove();
                     ex.graphics.ctx.clearRect(0,0,ex.width(),ex.height());
+                    initialized = true;
                     playPracticeGame();
                 })
                 var correctBox = textbox112("Correct! <span>BTN1</span> <span>BTN2</span>", {}, undefined, ex.height()/3, ex.height()/2 + margin);
