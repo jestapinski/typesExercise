@@ -88,7 +88,7 @@ var main = function(ex) {
         if (ex.data.instance.state.userQuestionNumber != undefined){
             userQuestionNumber = ex.data.instance.state.userQuestionNumber;
             if (userQuestionNumber < 4){
-                initialized = false;
+                initialized = ex.data.instance.state.initialized;
                 //In first mode
                 practice = true;
                 dragInfo = ex.data.instance.state.dragInfo;
@@ -122,6 +122,7 @@ var main = function(ex) {
         data.bot2 = ex.data.bot2;
         data.total = total;
         data.userQuestionNumber = userQuestionNumber;
+        data.initialized = initialized
         data.dragInfo = dragInfo;
         data.userScore = userScore;
         data.isSubmitted = isSubmitted;
@@ -531,7 +532,7 @@ var main = function(ex) {
             dragInfo.typeOfElem = actualType;
         }
         ex.graphics.ctx.clearRect(0,0,ex.width(),ex.height());
-        initialized = true;
+        initialized = false;
         
         //Create graphics as needed
         // var width = ex.width()/2;
@@ -1121,6 +1122,8 @@ var main = function(ex) {
                 var correctBox = textbox112("Correct! <span>BTN1</span> <span>BTN2</span>", {}, undefined, ex.height()/3, ex.height()/2 + margin);
                 insertButtonTextbox112(correctBox, hideButton, "BTN1");
                 insertButtonTextbox112(correctBox, nahButton, "BTN2");
+                initialized = true;
+                saveData();
             }
             else{
                 saveData();
@@ -1130,6 +1133,7 @@ var main = function(ex) {
             return;
         }
         else {
+            initialized = true;
             //Add in feedback for wrong answers
             if (ex.data.meta.mode == "practice"){
                 if (expectedResult == "String" && expectedResult.slice(0,3) == "chr"){
