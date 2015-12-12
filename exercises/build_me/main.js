@@ -43,7 +43,7 @@ var main = function(ex) {
     console.log("ex.data.meta.mode");
     console.log(ex.data.meta.mode);
     var initialized = true;
-    //ex.data.instance.state = undefined;
+    // ex.data.instance.state = undefined;
     
 
     //temporary variable to figure out what to draw (we can figure out a better way) later
@@ -77,7 +77,7 @@ var main = function(ex) {
     //Testing purposes
     // ex.data.instance = {state: undefined};
     console.log(ex.data.instance.state);
-    // ex.data.instance.state = ex.unload(saveData);
+    ex.unload(saveData);
 
     //Unloading save state
     if (ex.data.instance.state != undefined){
@@ -208,7 +208,7 @@ var main = function(ex) {
         // ex.createParagraph(500, 500, "Hello world");
         // var newButton = ex.createButton(0, 0, "OK");
         // newButton.on("click", function() {
-        //     console.log("such button very 539");
+        //     console.log("such button verypro 539");
         //     newBox.remove();
         //     secondInstructionBox();
         // })
@@ -327,6 +327,7 @@ var main = function(ex) {
     }
 
     dragInfo.mousedown = function(event) {
+        if (isSubmitted){return;}
         var x = event.offsetX;
         var y = event.offsetY;
         for (var i = 0; i < dragInfo.rect.length; i++){
@@ -342,6 +343,7 @@ var main = function(ex) {
     };
 
     dragInfo.mousemove = function(event) {
+        if (isSubmitted){return;}
         for (var i = 0; i < dragInfo.rect.length; i++){
             if (dragInfo.rect[i].drag) {
                 //move the rect
@@ -360,14 +362,14 @@ var main = function(ex) {
     };
 
     function rectsCollide(rect1, rect2){
-        return ((rect1.left > rect2.left && 
-            rect1.left < rect2.right) ||
-            (rect1.right > rect2.left && 
-                rect1.right < rect2.right)) && 
-            ((rect1.top > rect2.top &&
-                rect1.top < rect2.bottom) ||
-            (rect1.bottom > rect2.top &&
-                rect1.bottom < rect2.bottom));
+        return ((rect1.left >= rect2.left && 
+            rect1.left <= rect2.right) ||
+            (rect1.right >= rect2.left && 
+                rect1.right <= rect2.right)) && 
+            ((rect1.top >= rect2.top &&
+                rect1.top <= rect2.bottom) ||
+            (rect1.bottom >= rect2.top &&
+                rect1.bottom <= rect2.bottom));
 
     };
 
@@ -377,6 +379,17 @@ var main = function(ex) {
         box.right = box.left + box.width;
         box.bottom = box.top + box.height;
         drawAll();
+    }
+    
+    function twoInSame(){
+        for (var i = 12; i < dragInfo.rect.length; i++){
+            for (var j = 12; j < dragInfo.rect.length; j++){
+                if (rectsCollide(dragInfo.rect[i], dragInfo.rect[j]) && i != j){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     dragInfo.mouseup = function(event) {
@@ -409,6 +422,7 @@ var main = function(ex) {
                         dragInfo.rect[i].top = dragInfo.rect[0].top;
                         dragInfo.rect[i].right = dragInfo.rect[0].right;
                         dragInfo.rect[i].bottom = dragInfo.rect[0].bottom;
+                        if (twoInSame()){resetBox(dragInfo.rect[i]);}
                         drawAll();
                     } else if (rectsCollide(dragInfo.rect[i], dragInfo.rect[1])){
                         dragInfo.rect[i].drag = false;
@@ -416,6 +430,7 @@ var main = function(ex) {
                         dragInfo.rect[i].top = dragInfo.rect[1].top;
                         dragInfo.rect[i].right = dragInfo.rect[1].right;
                         dragInfo.rect[i].bottom = dragInfo.rect[1].bottom;
+                        if (twoInSame()){resetBox(dragInfo.rect[i]);}
                         drawAll();
                     } else if (rectsCollide(dragInfo.rect[i], dragInfo.rect[2])){
                         dragInfo.rect[i].drag = false;
@@ -423,6 +438,7 @@ var main = function(ex) {
                         dragInfo.rect[i].top = dragInfo.rect[2].top;
                         dragInfo.rect[i].right = dragInfo.rect[2].right;
                         dragInfo.rect[i].bottom = dragInfo.rect[2].bottom;
+                        if (twoInSame()){resetBox(dragInfo.rect[i]);}
                         drawAll();
                     } else if (rectsCollide(dragInfo.rect[i], dragInfo.rect[3])){
                         dragInfo.rect[i].drag = false;
@@ -430,6 +446,7 @@ var main = function(ex) {
                         dragInfo.rect[i].top = dragInfo.rect[3].top;
                         dragInfo.rect[i].right = dragInfo.rect[3].right;
                         dragInfo.rect[i].bottom = dragInfo.rect[3].bottom;
+                        if (twoInSame()){resetBox(dragInfo.rect[i]);}
                         drawAll();
                     } else if (rectsCollide(dragInfo.rect[i], dragInfo.rect[4])){
                         dragInfo.rect[i].drag = false;
@@ -437,6 +454,7 @@ var main = function(ex) {
                         dragInfo.rect[i].top = dragInfo.rect[4].top;
                         dragInfo.rect[i].right = dragInfo.rect[4].right;
                         dragInfo.rect[i].bottom = dragInfo.rect[4].bottom;
+                        if (twoInSame()){resetBox(dragInfo.rect[i]);}
                         drawAll();
                     } else if (rectsCollide(dragInfo.rect[i], dragInfo.rect[5])){
                         dragInfo.rect[i].drag = false;
@@ -444,6 +462,7 @@ var main = function(ex) {
                         dragInfo.rect[i].top = dragInfo.rect[5].top;
                         dragInfo.rect[i].right = dragInfo.rect[5].right;
                         dragInfo.rect[i].bottom = dragInfo.rect[5].bottom;
+                        if (twoInSame()){resetBox(dragInfo.rect[i]);}
                         drawAll();
                     } else if (rectsCollide(dragInfo.rect[i], dragInfo.rect[6])){
                         dragInfo.rect[i].drag = false;
@@ -451,6 +470,7 @@ var main = function(ex) {
                         dragInfo.rect[i].top = dragInfo.rect[6].top;
                         dragInfo.rect[i].right = dragInfo.rect[6].right;
                         dragInfo.rect[i].bottom = dragInfo.rect[6].bottom;
+                        if (twoInSame()){resetBox(dragInfo.rect[i]);}
                         drawAll();
                     } else if (rectsCollide(dragInfo.rect[i], dragInfo.rect[7])){
                         dragInfo.rect[i].drag = false;
@@ -458,6 +478,7 @@ var main = function(ex) {
                         dragInfo.rect[i].top = dragInfo.rect[7].top;
                         dragInfo.rect[i].right = dragInfo.rect[7].right;
                         dragInfo.rect[i].bottom = dragInfo.rect[7].bottom;
+                        if (twoInSame()){resetBox(dragInfo.rect[i]);}
                         drawAll();
                     } else if (rectsCollide(dragInfo.rect[i], dragInfo.rect[8])){
                         dragInfo.rect[i].drag = false;
@@ -465,6 +486,7 @@ var main = function(ex) {
                         dragInfo.rect[i].top = dragInfo.rect[8].top;
                         dragInfo.rect[i].right = dragInfo.rect[8].right;
                         dragInfo.rect[i].bottom = dragInfo.rect[8].bottom;
+                        if (twoInSame()){resetBox(dragInfo.rect[i]);}
                         drawAll();
                     } else if (rectsCollide(dragInfo.rect[i], dragInfo.rect[9])){
                         dragInfo.rect[i].drag = false;
@@ -472,6 +494,7 @@ var main = function(ex) {
                         dragInfo.rect[i].top = dragInfo.rect[9].top;
                         dragInfo.rect[i].right = dragInfo.rect[9].right;
                         dragInfo.rect[i].bottom = dragInfo.rect[9].bottom;
+                        if (twoInSame()){resetBox(dragInfo.rect[i]);}
                         drawAll();
                     } else if (rectsCollide(dragInfo.rect[i], dragInfo.rect[10])){
                         dragInfo.rect[i].drag = false;
@@ -479,6 +502,7 @@ var main = function(ex) {
                         dragInfo.rect[i].top = dragInfo.rect[10].top;
                         dragInfo.rect[i].right = dragInfo.rect[10].right;
                         dragInfo.rect[i].bottom = dragInfo.rect[10].bottom;
+                        if (twoInSame()){resetBox(dragInfo.rect[i]);}
                         drawAll();
                     } else if (rectsCollide(dragInfo.rect[i], dragInfo.rect[11])){
                         dragInfo.rect[i].drag = false;
@@ -486,6 +510,7 @@ var main = function(ex) {
                         dragInfo.rect[i].top = dragInfo.rect[11].top;
                         dragInfo.rect[i].right = dragInfo.rect[11].right;
                         dragInfo.rect[i].bottom = dragInfo.rect[11].bottom;
+                        if (twoInSame()){resetBox(dragInfo.rect[i]);}
                         drawAll();
                     } else {
                         resetBox(dragInfo.rect[i]);
@@ -502,6 +527,7 @@ var main = function(ex) {
     ex.graphics.on("mousedown",dragInfo.mousedown);
 
     function playPracticeGame(){
+        isSubmitted = false;
         
         ex.chromeElements.resetButton.disable();
         ex.chromeElements.submitButton.disable(); 
@@ -509,6 +535,7 @@ var main = function(ex) {
 
         if (userQuestionNumber > 3){
             initialized = true;
+            isSubmitted = false;
             practice = false;
             playQuizGame();
             return;
@@ -1096,6 +1123,7 @@ var main = function(ex) {
         //console.log("here");
         //console.log(userAttempts);
         //console.log(userScore);
+        isSubmitted = true;
         userQuestionNumber++;
         saveData();
         var margin = -40;
@@ -1316,6 +1344,7 @@ var main = function(ex) {
     }
 
     function provideQuizFeedback(bottom1, bottom2) {
+        saveData();
         if (practice == true){
             ex.chromeElements.submitButton.enable();
             return;}
@@ -1389,6 +1418,8 @@ var main = function(ex) {
         var totalScore = (total / 12);
         //Set the grade
         if (ex.data.meta.mode == "quiz-delay" || ex.data.meta.mode == "quiz-immediate"){
+            console.log("Trying to set grade");
+        ex.setGrade(totalScore, "Good job!");
         ex.setGrade(totalScore, "Good job!");
         }
         ex.showFeedback(total.toString().concat("/12"));
@@ -1406,6 +1437,7 @@ var main = function(ex) {
     ex.chromeElements.submitButton.on("click", function() {
         saveData();
         provideQuizFeedback(ex.data.bot1, ex.data.bot2);
+        saveData();
     });
   
     function runQuizDelayMode(){
